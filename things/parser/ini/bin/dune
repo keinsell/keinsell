@@ -1,0 +1,4 @@
+(executable
+ (public_name ini)
+ (name main)
+ (libraries ini))
