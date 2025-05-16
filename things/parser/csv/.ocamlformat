@@ -1,0 +1,5 @@
+version=0.29.1
+profile=conventional
+extension_interface = .rei
+extension_impl = .re
+enable-outside-detected-project = true
