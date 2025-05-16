@@ -5,7 +5,7 @@ import * as JsxRuntime from "react/jsx-runtime";
 
 function make(props) {
   var newrecord = Caml_obj.obj_dup(props);
-  return JsxRuntime.jsx("button", (newrecord.className = "inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out", newrecord));
+  return JsxRuntime.jsx("button", (newrecord.className = "inline-block px-6 py-2.5 bg-indigo-600 text-white font-medium text-sm rounded-md shadow-sm hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-indigo-800 transition duration-150 ease-in-out", newrecord));
 }
 
 export {
