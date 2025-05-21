@@ -29,8 +29,20 @@ type operation =
  let program = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
 
 let () = {
-  print_endline("Brainfuck Interpreter v1.0.0")
-  let tokens: array<char> = program |> String.to_seq |> Array.of_seq;
+  print_endline("Brainfuck Interpreter v1.0.0");
+
+  let tokens: array<char> = program 
+    |> String.to_seq 
+    |> Array.of_seq;
+
+  print_endline("Tokens:");
+  tokens
+  |> Array.iter((token: char) => {
+    print_char(token);
+    print_string(" ");
+  });
+  print_endline("");
+
   let parse_token = (token: char): operation => {
     let operation: option<operation> = switch(token) {
     | '+' => Some(Increment)
@@ -44,6 +56,12 @@ let () = {
     };
     operation |> Option.get
 };
+
+  print_endline("Parsed Operations:");
+  let print_int = (i: int) => {
+    print_string(Int.to_string(i));
+  };
+
   let ops: array<operation> = {
     tokens
     |> Array.map(parse_token)

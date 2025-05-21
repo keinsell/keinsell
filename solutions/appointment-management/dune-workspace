@@ -1,0 +1,13 @@
+(lang dune 3.18)
+
+(context default)
+
+; define env vars
+
+(env
+ (ml
+  (env-vars
+   (ODOC_SYNTAX ocaml)))
+ (re
+  (env-vars
+   (ODOC_SYNTAX reason))))

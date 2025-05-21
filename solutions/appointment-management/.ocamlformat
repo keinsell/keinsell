@@ -1,0 +1,16 @@
+profile = conventional
+version = 0.26.1
+margin = 100
+parse-docstrings = true
+type-decl = sparse
+break-cases = fit-or-vertical
+cases-exp-indent = 2
+space-around-arrays = true
+space-around-lists = true
+space-around-records = true
+sequence-style = separator
+doc-comments = before
+field-space = loose
+let-binding-spacing = compact
+module-item-spacing = sparse
+parens-tuple = always

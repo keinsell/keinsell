@@ -2,6 +2,8 @@
 
 A CSV parser implementation in ReasonML.
 
+- Implemented `Lexer` and `Parser` which aims to *tokenize* provided input string 
+
 ## Setup
 
 ```bash

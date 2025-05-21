@@ -1,0 +1,23 @@
+# Dune/OCaml generated files
+_build/
+*.install
+*.merlin
+
+# Esy files
+node_modules/
+_esy/
+_release/
+
+# OPAM files
+_opam/
+
+# Editor files
+.vscode/
+.idea/
+.*.swp
+.*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
+result
