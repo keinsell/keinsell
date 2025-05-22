@@ -1,0 +1,27 @@
+{
+  "name": "identicon",
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".res.mjs",
+  "editor": {
+    "autocomplete": {
+      "array": ["ArrayExtra"]
+    }
+  },
+  "external-stdlib": "@rescript/std",
+  "reanalyze": {
+    "analysis": ["dce", "exception"],
+    "suppress": [],
+    "unsuppress": []
+  },
+  "bs-dependencies": ["@rescript/core", "@rescript/webapi"],
+  "bsc-flags": ["-open RescriptCore", "-open Belt", "-open WebApi.Global"],
+  "bs-dev-dependencies": [],
+  "uncurried": true
+}

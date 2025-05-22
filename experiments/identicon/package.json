@@ -1,0 +1,24 @@
+{
+  "name": "identicon",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "rewatch build",
+    "clean": "rescript clean",
+    "dev": "rewatch watch"
+  },
+  "keywords": [
+    "rescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@rescript/core": "^1.6.1",
+    "@rescript/std": "12.0.0-alpha.9",
+    "@rescript/webapi": "0.1.0-experimental-5bac86c"
+  },
+  "devDependencies": {
+    "@rolandpeelen/rewatch": "^1.2.0",
+    "reanalyze": "^2.23.0",
+    "rescript": "12.0.0-alpha.9"
+  }
+}
