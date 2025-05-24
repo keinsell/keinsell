@@ -7,84 +7,88 @@ import FormattedDate from '../components/FormattedDate.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
+		<style>
+			.post-tag {
+				@apply inline-block px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded;
+			}
+		</style>
 	</head>
 
-	<body class="min-h-screen bg-background">
+	<body class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
 		<Header />
-		<main class="container mx-auto px-4 py-8 max-w-4xl">
-			<article class="prose prose-lg max-w-none">
+		<main class="max-w-3xl mx-auto px-4 py-8">
+			<article>
 				<!-- Hero Image -->
 				{heroImage && (
-					<div class="not-prose mb-8">
-						<div class="aspect-video overflow-hidden rounded-xl bg-muted">
-							<img 
-								src={heroImage} 
-								alt={title}
-								class="object-cover w-full h-full"
-							/>
-						</div>
+					<div class="mb-8">
+						<img 
+							src={heroImage} 
+							alt={title}
+							class="w-full rounded-lg"
+						/>
 					</div>
 				)}
 
 				<!-- Article Header -->
-				<header class="not-prose mb-8 text-center">
-					<div class="flex items-center justify-center space-x-2 text-sm text-muted-foreground mb-4">
-						<FormattedDate date={pubDate} />
-						{updatedDate && (
-							<>
-								<span>•</span>
-								<span>Updated <FormattedDate date={updatedDate} /></span>
-							</>
-						)}
-						<span>•</span>
-						<span>5 min read</span>
-					</div>
-					
-					<h1 class="text-4xl font-bold tracking-tight mb-4 text-foreground">
+				<header class="mb-8">
+					<h1 class="text-3xl font-bold mb-4">
 						{title}
 					</h1>
 					
+					<div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
+						<div class="flex items-center gap-4">
+							<FormattedDate date={pubDate} />
+							{updatedDate && (
+								<span>Updated <FormattedDate date={updatedDate} /></span>
+							)}
+						</div>
+						
+						{tags && tags.length > 0 && (
+							<div class="flex flex-wrap gap-1">
+								{tags.map(tag => (
+									<span class="post-tag">{tag}</span>
+								))}
+							</div>
+						)}
+					</div>
+					
 					{description && (
-						<p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+						<p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
 							{description}
 						</p>
 					)}
-					
-					<div class="mt-6 pt-6 border-t border-border"></div>
 				</header>
 
 				<!-- Article Content -->
-				<div class="prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-7 prose-a:text-primary prose-a:decoration-primary/30 prose-strong:text-foreground prose-code:text-foreground prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-pre:bg-muted prose-pre:border prose-pre:border-border prose-blockquote:border-l-4 prose-blockquote:border-border prose-blockquote:text-muted-foreground">
+				<div class="prose prose-gray dark:prose-invert max-w-none">
 					<slot />
 				</div>
 
 				<!-- Article Footer -->
-				<footer class="not-prose mt-12 pt-8 border-t border-border">
+				<footer class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
 					<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-						<div class="text-sm text-muted-foreground">
-							Published on <FormattedDate date={pubDate} />
+						<div class="text-sm text-gray-500 dark:text-gray-400">
+							Published <FormattedDate date={pubDate} />
 							{updatedDate && (
 								<span class="block sm:inline">
 									<span class="hidden sm:inline"> • </span>
-									Last updated on <FormattedDate date={updatedDate} />
+									Updated <FormattedDate date={updatedDate} />
 								</span>
 							)}
 						</div>
 						
-						<div class="flex items-center space-x-2">
-							<a 
-								href="/blog" 
-								class="btn btn-secondary text-sm"
-							>
-								← Back to blog
-							</a>
-						</div>
+						<a 
+							href="/blog" 
+							class="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+						>
+							← Back to blog
+						</a>
 					</div>
 				</footer>
 			</article>
