@@ -1,7 +1,11 @@
 {
-  "name": "www",
+  "name": "www.keinsell.com",
+  "description": "personal website",
+  "files": [
+    "dist/**"
+  ],
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

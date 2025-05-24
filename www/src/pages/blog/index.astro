@@ -1,18 +1,27 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import FormattedDate from '../components/FormattedDate.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-).slice(0, 5);
+);
+
+// Get all unique tags
+const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort();
+
+// Get selected tag from URL params
+const selectedTag = Astro.url.searchParams.get('tag');
+const filteredPosts = selectedTag 
+	? posts.filter(post => post.data.tags?.includes(selectedTag))
+	: posts;
 ---
 
 <html lang="en">
-    <head>
-        <BaseHead title="keinsell" description="Jakub Olan - Software engineer focused on Rust, OCaml, and building meaningful tools." />
-        <style>
+	<head>
+		<BaseHead title="Blog" description="My thoughts and writings on technology, development, and more." />
+		<style>
 			* { margin: 0; padding: 0; box-sizing: border-box; }
 			body {
 				font: 13px/1.4 Verdana, Geneva, sans-serif;
@@ -26,28 +35,17 @@ const posts = (await getCollection('blog')).sort(
 				max-width: 800px;
 				padding: 0 20px;
 			}
-			.intro {
-				margin-bottom: 25px;
-				font-size: 12px;
-				line-height: 1.5;
+			.tags {
+				margin-bottom: 15px;
+				font-size: 11px;
 			}
-			.intro h1 {
-				font-size: 16px;
-				font-weight: bold;
-				margin-bottom: 8px;
-			}
-			.intro p {
-				margin-bottom: 8px;
-				color: #333;
-			}
-			.intro-links a {
+			.tag {
+				margin-right: 8px;
 				color: #666;
-				margin-right: 12px;
 			}
-			.recent {
-				font-size: 13px;
+			.tag.active {
+				color: #000;
 				font-weight: bold;
-				margin-bottom: 10px;
 			}
 			.stories {
 				border-collapse: collapse;
@@ -83,7 +81,7 @@ const posts = (await getCollection('blog')).sort(
 				font-size: 10px;
 				margin-top: 2px;
 			}
-			.story-tags span {
+			.story-tags a {
 				color: #666;
 				margin-right: 6px;
 			}
@@ -98,31 +96,28 @@ const posts = (await getCollection('blog')).sort(
 			@media (prefers-color-scheme: dark) {
 				body { background: #1a1a1a; color: #ccc; }
 				a { color: #999; }
-				.intro p { color: #aaa; }
+				.tag.active { color: #ccc; }
 				.story-title a { color: #ccc; }
 				.story { border-color: #333; }
 				.footer { border-color: #333; }
 			}
 		</style>
-    </head>
-    <body>
+	</head>
+	<body>
 		<Header />
 		<div class="container">
 			
-			<div class="intro">
-				<h1>keinsell</h1>
-				<p>Software engineer building with Rust and OCaml. I focus on creating tools that matter - from terminal applications that track caffeine intake using neuroscience to exploring the intersection of finance and technology.</p>
-				<p>Currently seeking opportunities where quality is measured by stability and maintainability, not just delivery speed. I'd rather work on meaningful projects with solid foundations than rush features built on shaky ground.</p>
-				<div class="intro-links">
-					<a href="/blog">blog</a>
-					<a href="/story">story</a>
-					<a href="https://github.com/keinsell">github</a>
-				</div>
+			<div class="tags">
+				<a href="/blog" class={!selectedTag ? "tag active" : "tag"}>all</a>
+				{allTags.map(tag => (
+					<a href={`/blog?tag=${tag}`} class={selectedTag === tag ? "tag active" : "tag"}>
+						{tag}
+					</a>
+				))}
 			</div>
-
-			<div class="recent">Recent Posts</div>
+			
 			<table class="stories">
-				{posts.map((post, index) => (
+				{filteredPosts.map((post, index) => (
 					<tr class="story">
 						<td class="story-rank">{index + 1}.</td>
 						<td>
@@ -134,7 +129,7 @@ const posts = (await getCollection('blog')).sort(
 								{post.data.tags && post.data.tags.length > 0 && (
 									<div class="story-tags">
 										{post.data.tags.map(tag => (
-											<span>{tag}</span>
+											<a href={`/blog?tag=${tag}`}>{tag}</a>
 										))}
 									</div>
 								)}
@@ -144,9 +139,15 @@ const posts = (await getCollection('blog')).sort(
 				))}
 			</table>
 			
+			{filteredPosts.length === 0 && (
+				<div style="text-align: center; padding: 40px; color: #999; font-size: 12px;">
+					No posts found for tag "{selectedTag}".
+				</div>
+			)}
+			
 			<div class="footer">
 				&copy; 2025 keinsell | <a href="https://github.com/keinsell">github</a> | <a href="https://twitter.com/keinsell">twitter</a>
 			</div>
 		</div>
-    </body>
+	</body>
 </html>

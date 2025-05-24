@@ -1,83 +1,118 @@
 ---
-import HeaderLink from "./HeaderLink.astro";
-import { SITE_TITLE } from "../consts";
+const currentPath = Astro.url.pathname;
 ---
 
-<header class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-    <div class="max-w-3xl mx-auto px-4">
-        <nav class="flex h-14 items-center justify-between">
-            <div class="flex items-center space-x-6">
-                <h2 class="text-lg font-semibold">
-                    <a href="/" class="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 no-underline">
-                        {SITE_TITLE}
-                    </a>
-                </h2>
-                <div class="hidden sm:flex items-center space-x-6">
-                    <HeaderLink href="/" text="Home" />
-                    <HeaderLink href="/blog" text="Blog" />
-                    <HeaderLink href="/story" text="Story" />
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-2">
-                <!-- Dark mode toggle -->
-                <button 
-                    id="theme-toggle"
-                    class="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    aria-label="Toggle theme"
-                >
-                    <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                    </svg>
-                    <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                </button>
-                
-                <!-- Mobile menu button -->
-                <button 
-                    id="mobile-menu-toggle"
-                    class="sm:hidden p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    aria-label="Toggle menu"
-                >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </nav>
-        
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden sm:hidden border-t border-gray-200 dark:border-gray-800">
-            <div class="py-3 space-y-2">
-                <HeaderLink href="/" text="Home" />
-                <HeaderLink href="/blog" text="Blog" />
-                <HeaderLink href="/story" text="Story" />
-            </div>
-        </div>
-    </div>
-</header>
+<style>
+	.nav-container {
+		border-bottom: 1px solid #ccc;
+		background: #fff;
+		position: sticky;
+		top: 0;
+		z-index: 100;
+	}
+	.nav-wrapper {
+		margin: 0 auto;
+		max-width: 800px;
+		padding: 0 20px;
+	}
+	.nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 44px;
+		font: 13px/1.4 Verdana, Geneva, sans-serif;
+	}
+	.nav-links {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+	}
+	.nav-link {
+		font-size: 13px;
+		color: #666;
+		text-decoration: none;
+		padding: 8px 0;
+		position: relative;
+		transition: color 0.2s ease;
+	}
+	.nav-link:hover {
+		color: #000;
+		text-decoration: none;
+	}
+	.nav-link.active {
+		color: #000;
+		font-weight: bold;
+	}
+	.nav-link.active::after {
+		content: '';
+		position: absolute;
+		bottom: -1px;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: #000;
+	}
+	.nav-secondary {
+		font-size: 11px;
+		color: #999;
+	}
+	.nav-secondary a {
+		color: #999;
+		text-decoration: none;
+		margin-left: 8px;
+	}
+	.nav-secondary a:hover {
+		color: #666;
+		text-decoration: underline;
+	}
+	
+	@media (prefers-color-scheme: dark) {
+		.nav-container {
+			background: #1a1a1a;
+			border-color: #444;
+		}
+		.nav-link {
+			color: #999;
+		}
+		.nav-link:hover {
+			color: #ccc;
+		}
+		.nav-link.active {
+			color: #ccc;
+		}
+		.nav-link.active::after {
+			background: #ccc;
+		}
+		.nav-secondary a {
+			color: #666;
+		}
+		.nav-secondary a:hover {
+			color: #999;
+		}
+	}
+	
+	@media (max-width: 600px) {
+		.nav-links {
+			gap: 15px;
+		}
+		.nav-link {
+			font-size: 12px;
+		}
+		.nav-secondary {
+			display: none;
+		}
+	}
+</style>
 
-<script>
-    // Theme toggle functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const html = document.documentElement;
-    
-    // Check for saved theme preference or default to light
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    html.classList.toggle('dark', currentTheme === 'dark');
-    
-    themeToggle?.addEventListener('click', () => {
-        const isDark = html.classList.contains('dark');
-        html.classList.toggle('dark', !isDark);
-        localStorage.setItem('theme', !isDark ? 'dark' : 'light');
-    });
-    
-    // Mobile menu toggle
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuToggle?.addEventListener('click', () => {
-        mobileMenu?.classList.toggle('hidden');
-    });
-</script>
+<div class="nav-container">
+	<div class="nav-wrapper">
+		<nav class="nav">
+			<div class="nav-links">
+				<a href="/" class={`nav-link ${currentPath === '/' ? 'active' : ''}`}>home</a>
+				<a href="/blog" class={`nav-link ${currentPath.startsWith('/blog') ? 'active' : ''}`}>blog</a>
+				<a href="/story" class={`nav-link ${currentPath.startsWith('/story') ? 'active' : ''}`}>story</a>
+				<a href="/about" class={`nav-link ${currentPath.startsWith('/about') ? 'active' : ''}`}>about</a>
+			</div>
+		</nav>
+	</div>
+</div>

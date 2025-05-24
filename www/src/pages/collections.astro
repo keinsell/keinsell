@@ -1,0 +1,163 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+const collections = (await getCollection('collections')).sort(
+	(a, b) => (a.data.order || 999) - (b.data.order || 999)
+);
+
+const blog = await getCollection('blog');
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title="Collections" description="Organized series of posts on specific topics." />
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			body {
+				font: 13px/1.5 Verdana, Geneva, sans-serif;
+				color: #000;
+				background: #fff;
+			}
+			a { color: #666; text-decoration: none; }
+			a:hover { text-decoration: underline; }
+			.container { 
+				margin: 20px auto;
+				max-width: 800px;
+				padding: 0 20px;
+			}
+			.page-header {
+				margin-bottom: 20px;
+			}
+			.page-header h1 {
+				font-size: 16px;
+				font-weight: bold;
+				margin-bottom: 6px;
+			}
+			.page-header p {
+				color: #666;
+				font-size: 12px;
+			}
+			.collection {
+				border-bottom: 1px solid #eee;
+				padding: 15px 0;
+			}
+			.collection:last-child {
+				border-bottom: none;
+			}
+			.collection-header h2 {
+				font-size: 14px;
+				font-weight: bold;
+				margin-bottom: 5px;
+			}
+			.collection-header h2 a {
+				color: #000;
+			}
+			.collection-meta {
+				font-size: 11px;
+				color: #999;
+				margin-bottom: 8px;
+			}
+			.collection-description {
+				font-size: 12px;
+				color: #333;
+				margin-bottom: 10px;
+				line-height: 1.4;
+			}
+			.collection-posts {
+				font-size: 11px;
+				color: #666;
+			}
+			.collection-posts a {
+				color: #666;
+				margin-right: 8px;
+			}
+			.status {
+				display: inline-block;
+				padding: 1px 4px;
+				font-size: 9px;
+				border-radius: 2px;
+				margin-left: 5px;
+			}
+			.status.active { background: #e6f3ff; color: #0066cc; }
+			.status.completed { background: #e6ffe6; color: #006600; }
+			.status.draft { background: #fff0e6; color: #cc6600; }
+			.footer {
+				margin-top: 40px;
+				font-size: 10px;
+				color: #999;
+				text-align: center;
+				border-top: 1px solid #eee;
+				padding-top: 15px;
+			}
+			@media (prefers-color-scheme: dark) {
+				body { background: #1a1a1a; color: #ccc; }
+				a { color: #999; }
+				.page-header p { color: #999; }
+				.collection { border-color: #333; }
+				.collection-header h2 a { color: #ccc; }
+				.collection-description { color: #aaa; }
+				.footer { border-color: #333; }
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<div class="container">
+			
+			<div class="page-header">
+				<h1>Collections</h1>
+				<p>Organized series of posts on specific topics.</p>
+			</div>
+
+			{collections.map((collection) => {
+				const collectionPosts = blog.filter(post => 
+					post.data.collection === collection.data.slug
+				).sort((a, b) => (a.data.order || 999) - (b.data.order || 999));
+				
+				return (
+					<div class="collection">
+						<div class="collection-header">
+							<h2>
+								<a href={`/collections/${collection.data.slug}/`}>
+									{collection.data.title}
+								</a>
+								<span class={`status ${collection.data.status}`}>
+									{collection.data.status}
+								</span>
+							</h2>
+						</div>
+						
+						<div class="collection-meta">
+							{collectionPosts.length} post{collectionPosts.length !== 1 ? 's' : ''}
+							{collection.data.startDate && (
+								<span> • Started <FormattedDate date={collection.data.startDate} /></span>
+							)}
+						</div>
+						
+						<div class="collection-description">
+							{collection.data.description}
+						</div>
+						
+						{collectionPosts.length > 0 && (
+							<div class="collection-posts">
+								Recent: {collectionPosts.slice(0, 3).map((post, index) => (
+									<>
+										<a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+										{index < Math.min(2, collectionPosts.length - 1) && ' • '}
+									</>
+								))}
+							</div>
+						)}
+					</div>
+				);
+			})}
+			
+			<div class="footer">
+				&copy; 2025 keinsell | <a href="https://github.com/keinsell">github</a> | <a href="https://twitter.com/keinsell">twitter</a>
+			</div>
+		</div>
+	</body>
+</html>
