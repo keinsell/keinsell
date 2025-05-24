@@ -1,0 +1,129 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title="About" description="About this site and how it's structured." />
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			body {
+				font: 13px/1.5 Verdana, Geneva, sans-serif;
+				color: #000;
+				background: #fff;
+			}
+			a { color: #666; text-decoration: none; }
+			a:hover { text-decoration: underline; }
+			.container { 
+				margin: 20px auto;
+				max-width: 700px;
+				padding: 0 20px;
+			}
+			.page-header {
+				margin-bottom: 20px;
+			}
+			.page-header h1 {
+				font-size: 16px;
+				font-weight: bold;
+				margin-bottom: 6px;
+			}
+			.page-header p {
+				color: #666;
+				font-size: 12px;
+			}
+			.content {
+				font-size: 12px;
+				line-height: 1.6;
+				margin-bottom: 30px;
+			}
+			.content h3 {
+				font-size: 13px;
+				font-weight: bold;
+				margin: 20px 0 8px 0;
+			}
+			.content p {
+				margin-bottom: 10px;
+			}
+			.content ul {
+				margin-left: 20px;
+				margin-bottom: 10px;
+			}
+			.content li {
+				margin-bottom: 5px;
+			}
+			.content code {
+				background: #f5f5f5;
+				padding: 2px 4px;
+				font-size: 11px;
+			}
+			.footer {
+				margin-top: 40px;
+				font-size: 10px;
+				color: #999;
+				text-align: center;
+				border-top: 1px solid #eee;
+				padding-top: 15px;
+			}
+			@media (prefers-color-scheme: dark) {
+				body { background: #1a1a1a; color: #ccc; }
+				a { color: #999; }
+				.page-header p { color: #999; }
+				.content code { background: #2a2a2a; color: #ccc; }
+				.footer { border-color: #333; }
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<div class="container">
+			
+			<div class="page-header">
+				<h1>About This Site</h1>
+				<p>Structure and navigation guide.</p>
+			</div>
+
+			<div class="content">
+				<p>This is a minimal personal website inspired by classic tech forums like lobster.rs and Hacker News. It prioritizes content over visual design and focuses on readability and simplicity.</p>
+
+				<h3>Site Structure</h3>
+				
+				<p><strong><a href="/">Home</a></strong> - Brief introduction and recent blog posts. Start here to get an overview of the site and latest content.</p>
+				
+				<p><strong><a href="/blog">Blog</a></strong> - Technical writings on software development, primarily focusing on Rust, OCaml, and building meaningful tools. Posts are organized chronologically and can be filtered by tags like <code>rust</code>, <code>ocaml</code>, <code>web-dev</code>, etc.</p>
+				
+				<p><strong><a href="/story">Story</a></strong> - Personal journey through technology, from early cryptocurrency involvement to professional software development. A longer-form narrative about my path through the industry.</p>
+				
+				<p><strong><a href="/about">About</a></strong> - This page, explaining how the site is organized and what you'll find where.</p>
+
+				<h3>Design Philosophy</h3>
+				
+				<p>The design intentionally mimics early 2000s tech forums:</p>
+				<ul>
+					<li>Verdana font for classic web readability</li>
+					<li>Minimal color palette (black, grays)</li>
+					<li>Table-based post listings with numbered rankings</li>
+					<li>No modern UI frameworks or visual bloat</li>
+					<li>Function over form in every design decision</li>
+				</ul>
+
+				<h3>Content Focus</h3>
+				
+				<p>The content centers around:</p>
+				<ul>
+					<li>Software engineering with emphasis on type safety and correctness</li>
+					<li>Rust and OCaml programming languages</li>
+					<li>Building tools that solve real problems</li>
+					<li>Industry observations and technical philosophy</li>
+					<li>Personal projects and experiments</li>
+				</ul>
+
+				<p>This site values stability and maintainability over trendy technologies. It's built with Astro and deployed as static files - simple, fast, and reliable.</p>
+			</div>
+			
+			<div class="footer">
+				&copy; 2025 keinsell | <a href="https://github.com/keinsell">github</a> | <a href="https://twitter.com/keinsell">twitter</a>
+			</div>
+		</div>
+	</body>
+</html>

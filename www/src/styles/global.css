@@ -58,39 +58,6 @@
   }
 }
 
-/* Typography */
-.prose {
-  @apply text-foreground;
-}
-
-.prose h1,
-.prose h2,
-.prose h3,
-.prose h4,
-.prose h5,
-.prose h6 {
-  @apply text-foreground font-semibold;
-}
-
-.prose p {
-  @apply text-muted-foreground leading-7;
-}
-
-.prose a {
-  @apply text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary transition-colors;
-}
-
-.prose code {
-  @apply bg-muted px-1.5 py-0.5 rounded-md text-sm font-mono;
-}
-
-.prose pre {
-  @apply bg-muted p-4 rounded-lg overflow-x-auto;
-}
-
-.prose blockquote {
-  @apply border-l-4 border-border pl-6 italic text-muted-foreground;
-}
 
 /* Custom components */
 .card {
