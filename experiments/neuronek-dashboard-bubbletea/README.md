@@ -1,84 +1,64 @@
-# Neuronek Dashboard - Substance Tracker
+# Neuronek Dashboard - Bubble Tea TUI
 
-A professional terminal-based substance dosage tracker built with Bubble Tea and the Bubbles component library. Track caffeine, supplements, and other substances with real-time intensity visualization.
+A terminal-based dashboard built with the Bubble Tea ecosystem for displaying real-time line charts.
 
 ## Features
 
-- **Built with Bubbles Components**: Uses production-ready components from the Bubbles library
-  - List component for substance selection
-  - Table component for dosage history
-  - Viewport for scrollable chart
-  - TextInput for amount entry
-  - Help system with key bindings
-- **Split-Screen Layout**: 3/4 screen for intensity chart, 1/4 for dosage table
-- **Real-time Visualization**: 24-hour substance intensity chart with automatic updates
-- **Half-life Calculations**: Accurate pharmacokinetic modeling
-- **Clean Architecture**: State-based UI with proper component separation
+- **Real-time animated line charts** with multiple data series
+- **Responsive terminal UI** that adapts to window resizing
+- **Three dashboard panels** showing different data patterns:
+  - Sine wave patterns (3 overlapping waves)
+  - Exponential decay functions
+  - Linear trends with noise
+- **Smooth animations** with 100ms update intervals
+- **Clean, styled interface** using Lip Gloss for styling
 
-## Components Used
+## Technologies
 
-- **List**: Interactive substance selection with descriptions
-- **Table**: Formatted dosage history with columns for substance, amount, time, and elapsed duration
-- **Viewport**: Scrollable chart area with proper rendering
-- **TextInput**: Validated numeric input for dosage amounts
-- **Help**: Context-aware keyboard shortcuts
-- **Lipgloss**: Professional styling with consistent theme
-
-## Installation
-
-1. Install Go (1.21 or later)
-2. Clone this repository
-3. Install dependencies:
-   ```bash
-   go mod download
-   ```
+- **[Bubble Tea](https://github.com/charmbracelet/bubbletea)** - TUI framework using The Elm Architecture
+- **[Lip Gloss](https://github.com/charmbracelet/lipgloss)** - CSS-like styling for terminal layouts
+- **[ntcharts](https://github.com/NimbleMarkets/ntcharts)** - Terminal charts with Braille line drawing
+- **Go 1.24+** - Modern Go with latest features
 
 ## Usage
 
-Run the application:
 ```bash
-go run main.go
+# Build the application
+go build -o neuronek-dashboard .
+
+# Run the dashboard
+./neuronek-dashboard
 ```
 
 ### Controls
 
-- **a** - Add new dose (opens substance selector)
-- **↑/k, ↓/j** - Navigate lists and tables
-- **Enter** - Select/confirm
-- **Esc** - Go back/cancel
-- **?** - Toggle help
-- **q** - Quit
-
-### Workflow
-
-1. Press 'a' to add a dose
-2. Select substance from the list using arrow keys
-3. Press Enter to proceed
-4. Enter dosage amount in milligrams
-5. Press Enter to confirm
+- `q` or `Ctrl+C` - Quit the application
+- Terminal window resizing is automatically handled
 
 ## Architecture
 
-The application follows Bubble Tea's Model-Update-View pattern with proper state management:
+The application follows the Bubble Tea Model-Update-View pattern:
 
-- **States**: Main dashboard, substance selection, amount input
-- **Components**: All UI elements use Bubbles library components
-- **Styling**: Consistent Lipgloss styling throughout
+- **Model**: Holds chart states, dimensions, and animation data
+- **Update**: Handles user input, window resizing, and animation ticks
+- **View**: Renders the styled dashboard layout with live charts
 
-## Substances
+## Development
 
-Pre-configured with:
-- **Caffeine** (5-hour half-life) - Red
-- **L-Theanine** (3-hour half-life) - Teal
-- **Modafinil** (12-hour half-life) - Blue
-- **Nicotine** (2-hour half-life) - Yellow
+```bash
+# Run tests
+go test -v
 
-## Customization
-
-Modify substances in `main.go`:
-```go
-substances := []Substance{
-    {Name: "Caffeine", HalfLife: 5 * time.Hour, Color: "#FF6B6B"},
-    // Add more substances here
-}
+# Check dependencies
+go mod tidy
 ```
+
+## Chart Data
+
+The dashboard displays three types of mathematical functions:
+
+1. **Sine Waves**: `sin(x + t)`, `sin(x + t + π/2)`, `sin(x + t + π)`
+2. **Exponential Decay**: `e^(-x/5) * sin(x + t)`, `e^(-x/3) * cos(x + t)`
+3. **Linear Trends**: Various linear functions with sinusoidal noise
+
+All data updates in real-time with smooth animations.

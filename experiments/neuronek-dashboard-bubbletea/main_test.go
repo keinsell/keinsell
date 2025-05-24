@@ -2,67 +2,71 @@ package main
 
 import (
 	"testing"
-	"time"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
-func TestSubstanceIntensityCalculation(t *testing.T) {
-	m := initialModel()
+func TestModelInitialization(t *testing.T) {
+	m := model{}
 	
-	// Add a test dosage
-	testSubstance := m.substances[0] // Caffeine
-	m.dosages = append(m.dosages, Dosage{
-		Substance: testSubstance,
-		Amount:    200, // 200mg
-		Time:      time.Now().Add(-2 * time.Hour), // 2 hours ago
-	})
+	// Test Init
+	cmd := m.Init()
+	if cmd == nil {
+		t.Error("Init() should return a command")
+	}
 	
-	// Calculate intensity now
-	intensity := m.calculateIntensity(testSubstance, time.Now())
+	// Test Update with window size
+	msg := tea.WindowSizeMsg{Width: 120, Height: 40}
+	newModel, _ := m.Update(msg)
 	
-	// After 2 hours with 5-hour half-life, should have ~75% remaining
-	// 200mg * 0.5^(2/5) ≈ 200mg * 0.758 ≈ 151.6mg
-	// Normalized to 0-1 scale: 151.6/100 = 1.516, capped at 1.0
-	expectedIntensity := 1.0
-	
-	if intensity != expectedIntensity {
-		t.Errorf("Expected intensity %f, got %f", expectedIntensity, intensity)
+	updatedModel := newModel.(model)
+	if updatedModel.width != 120 {
+		t.Errorf("Expected width 120, got %d", updatedModel.width)
+	}
+	if updatedModel.height != 40 {
+		t.Errorf("Expected height 40, got %d", updatedModel.height)
 	}
 }
 
-func TestFormatDuration(t *testing.T) {
-	tests := []struct {
-		duration time.Duration
-		expected string
-	}{
-		{30 * time.Second, "30s"},
-		{5 * time.Minute, "5m"},
-		{2*time.Hour + 30*time.Minute, "2h 30m"},
-		{25 * time.Hour, "1d 1h"},
+func TestModelUpdate(t *testing.T) {
+	m := model{width: 120, height: 40}
+	
+	// Initialize charts first
+	msg := tea.WindowSizeMsg{Width: 120, Height: 40}
+	newModel, _ := m.Update(msg)
+	m = newModel.(model)
+	
+	// Test data update
+	m.dataTime = 1.0
+	m.updateCharts()
+	
+	// Test that charts are populated (basic smoke test)
+	view := m.View()
+	if view == "Initializing dashboard..." {
+		t.Error("Dashboard should be initialized after setting dimensions")
 	}
 	
-	for _, test := range tests {
-		result := formatDuration(test.duration)
-		if result != test.expected {
-			t.Errorf("formatDuration(%v) = %s, expected %s", test.duration, result, test.expected)
-		}
+	if len(view) == 0 {
+		t.Error("View should return content")
 	}
 }
 
-func TestParseAmount(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected float64
-	}{
-		{"100", 100.0},
-		{"50.5", 50.5},
-		{"", 0.0},
-		{"abc", 0.0},
+func TestQuitCommand(t *testing.T) {
+	m := model{}
+	
+	// Test quit with 'q'
+	quitMsg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}}
+	_, cmd := m.Update(quitMsg)
+	
+	if cmd == nil {
+		t.Error("Quit command should be returned")
 	}
 	
-	for _, test := range tests {
-		result := parseAmount(test.input)
-		if result != test.expected {
-			t.Errorf("parseAmount(%s) = %f, expected %f", test.input, result, test.expected)
-		}
+	// Test quit with Ctrl+C
+	ctrlCMsg := tea.KeyMsg{Type: tea.KeyCtrlC}
+	_, cmd = m.Update(ctrlCMsg)
+	
+	if cmd == nil {
+		t.Error("Quit command should be returned for Ctrl+C")
 	}
 }
