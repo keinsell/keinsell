@@ -27,7 +27,7 @@ Maybe it's just me, a person who sees problems in all of this as my ego is a con
 
 I've observed people debating about microservices, serverless technology, what's beneficial, and what's scalable - but do they truly understand these terms, or do they even need scalability? If used incorrectly, these terms can lead to substantial financial losses simply because someone used a term they didn't understand. Back in 2017, when I attended software interviews and heard claims like "we are on microservices," I began to ask questions. "What's your team structure?" "3 teams of 5 people each." "How many users do you have?" "30,000." "How many requests per second on a weekly basis?" At this point, it often became clear that no one had checked such statistics. I highly doubt that 30,000 users necessitate a microservice architecture from, let's say, 10 or more servers; it seems quite unrealistic, and if not, then it's not a data-driven decision. Given the hype around microservices in 2017, I can understand how some companies might make such decisions. But who would listen to an intern without work experience at the time? The same skepticism applies to most technologies, including blockchain, serverless computing, AI, and so on.
 
-That's the case with overcomplicating software based on flawed data, and there's also another group of people - those who tend to oversimplify software. They assume that software working today in a controlled environment will continue to work in the future regardless of environmental changes. Such programmers can be identified by a common statement they make: "it works." Yes... "It works," but what if it breaks? An example of code written by such a developer would be:
+That's the case with overcomplicating software based on flawed data, and there's also another group of people - those who tend to oversimplify software. They assume that software working today in a controlled environment will continue to work in the future regardless of environmental changes. Such programmers can be identified by a common statement they make: "it works don't touch." Yes... "It works" but what if it breaks? An example of code written by such a developer would be:
 
 ```typescript
 // Decorated for DI by external library
@@ -36,8 +36,8 @@ class SomeService {
     // Which is decorated by framework
     someMethod(payload: xyz) {
         validate(xyz) // External validation library
-        checkIfExists(xyz) // External ORM Library
-        someAction(xyz) // Often seen external library like Lodash
+        readPersistance(xyz) // External ORM Library
+        mutateModel(xyz) // Often seen external library like Lodash
         return save(xyz)
     }
 }
@@ -45,7 +45,7 @@ class SomeService {
 
 Using external libraries to build your own software without rewriting the same code isn't inherently bad, but is it sustainable? I've observed that junior developers and interns often overuse libraries and APIs to such an extent that the original code written by the developer constitutes perhaps only 10-20% of the entire software. The rest depends on external parties or services that could theoretically fail at any moment. This excessive reliance on external components often leads to a situation where the software goes down due to its coupling and dependency, often without any possibility of porting these functionalities to a custom-made abstraction as a contingency plan.
 
-In my mind, I've always adhered to a limited-trust rule. While some scenarios are less likely, anything can fail or simply be discontinued. What happens when a third-party service, integral to tightly coupled software, shuts down? The estimated time for a rewrite or refactor could be 3-6 months. It's not just about the software and code; it's about the customers who may not be able to use the product for an extended period or about the entire business potentially going bankrupt due to such shortsighted planning. It's disheartening that I've been criticized for porting libraries, creating data structures, and reducing dependency on third-party software (e.g., just to have a simple mock implementation) wherever I've worked. I'm accused of "overcomplicating things" by developers who have no side projects, haven't maintained long-term projects, or have no genuine intention to understand the reasoning behind my approach to building software.
+In my mind, I've always adhered to a limited-trust rule. While some scenarios are less likely, anything can fail or simply be discontinued. What happens when a third-party service, integral to tightly coupled software, shuts down? The estimated time for a rewrite or refactor could be 3-6 months. It's not just about the software and code; it's about the customers who may not be able to use the product for an extended period or about the entire business potentially going bankrupt due to such shortsighted planning. It's disheartening that I've been criticized for porting libraries, creating data structures, and reducing dependency on third-party software (e.g., just to have a simple mock implementation) wherever I've worked.
 
 I always thought we're engineers dedicated to building solutions meant to last, at least that was the majority back in the day, a time when programming was the domain of the stereotypical autists and nerds with no personal life. You would be reprimanded for asking a trivial question, to encourage independent research. The learning process was focused on becoming self-sufficient, as programming inherently is. Eventually, you'll need to solve a problem on your own, a domain-specific issue that you can't find solutions for online. What will you do then? Copy code? Consult StackOverflow? Spoiler: You'll need to sit down and solve it, and I hope such challenges present themselves to every programmer multiple times in their career, or else they should seriously reconsider their career choice. Would you refuse to solve a problem just because it's too complex?
 
@@ -78,45 +78,9 @@ For maintaining the sanity and health of your codebase, I would advise the follo
 
 - Delete code related to external services that cannot be "turned off" within 5-15 minutes after reading the documentation (if any) about the integration. Skip this step if the external service is easily reproducible in a VM or container.
 
-- Every change in software or feature requested by a PM or similar should take more than 4 hours to consider for implementation. Think about the drawbacks and structure before even saying "it can be done." Learn to say "fuck off" to managers because, at the end of the day, you are the one who will end up in trouble if you implement hastily added features that later become unmaintainable or are simply useless. Say "no" to new features and, after consideration, come back with feedback about implementation. Always communicate estimates back to business people, multiplied by 3-5 times. If they then decide it's not important, the feature was likely unnecessary anyway, and you've just saved the business's money and your time.
+If you have software where you cannot apply any of these rules, e.g., there are no linter errors, the code is tested, and the pipeline is releasing and publishing your code package or application to multiple development environments before production, I would like to thank you. People like you are the foundation of principles and software. I might be wrong, but I don't believe such software is causing problems of any kind and your system is nowhere near full of stress.
 
-If you have software where you cannot apply any of these rules, e.g., there are no linter errors, the code is tested, and the pipeline is releasing and publishing your code package or application to multiple development environments before production, I would like to thank you. People like you are the foundation of principles and software. I might be wrong, but I don't believe such software is causing problems of any kind.
-
-### Soydev says...
-
-#### "It works on my machine"
-
-Every time I hear this statement, I want to flatline the person who said it due to the ignorance it displays. It's too easy to blame the user, but in reality, it's usually not their fault. I always ask about a containerized environment or some VM so I can really see if it "works on your machine," and suddenly there are no such things. How the fuck can you exist doing things like that? If you're incompetent at getting things done, at least shut your mouth.
-
-#### "It's subjective"
-
-You can have a subjective point of view on something, but overall, I don't give a shit about your "feelings" on the matter. Things either are, or they are not. If you wish to keep your mind subjective and biased, become an artist, not an engineer. I haven't seen any bridge architects skipping physics because "it doesn't seem right" and they "feel bad about the correct math." Your job has nothing to do with your emotions and feelings about code, which is a purely logical expression of a task and doesn't have emotions. Put your bias in your pocket, listen to what others have to say, and decide based on real data presented. If there is no data, postpone the decision or use the most "exitable" option to deviate from it when things go bad.
-
-#### "Use {insert random technology vendor name e.g., Docker}"
-
-I FUCKING HATE PEOPLE WHO REFER TO A SOLUTION AS A BRAND. Why can't people use the most generic name possible and leave space for implementation and choice, but they predefine the choice of technology as if it would be their only skill without the intention to learn anything else?
-
-#### "XYZ doesn't matter, 'cause code works and does its job"
-
-Often said by developers who have built the worst possible shit that only they can understand, and often such code omits any standards. The discussion can be started by saying it's not understandable.
-
-#### "It's not rocket science"
-
-This famous statement is often seen by people who will use an external library or API to solve a specific problem. Let's be real here, even rocket science isn't "rocket science" - if you know dynamics and physics, what's really hard about rocket science? It's time-consuming, like everything, but overall nothing is "that hard" if you have the prerequisites.
-
-#### JavaScript/Python Developer about performance
-
-The most famous group of people who tend to complain about performance while using a programming language that was not meant to be performance-oriented. All of you just shut the fuck up. JavaScript was meant to be a simple scripting language, and
-
-### Embracing the Eventual Transition
-
-Just as parents raise their children with the hope that they will one day become independent, I believe in nurturing systems and software with the same intention. While I don't have children myself, I understand that the ultimate satisfaction for a parent is witnessing their child's ability to thrive independently. They know they've instilled resilience, strength, and self-sufficiency. Similarly, my goal in any organization is to develop systems that are robust and maintainable.
-
-I yearn for the day when I can step away from a company, knowing that I've left behind a system so well-constructed and documented that any developer could step in and efficiently maintain or modify it. Ideally, they would be able to understand the structure and logic within 30 minutes to an hour of reading and navigating through the codebase. This isn't just about making my replacement's job easier; it's about pride in craftsmanship and a testament to the quality of work.
-
-Creating such a legacy means investing time and effort into not only solving the immediate problems but also considering the system's long-term health and adaptability. It involves thorough documentation, clean and understandable code, and a well-thought-out architecture that can stand the test of time and changes in personnel. It's about building something greater than the sum of its parts - a system that embodies the principles of good design and foresight.
-
-### Confessions of a Flawed Developer
+## Confessions of a Flawed Developer
 
 Let's face it, I'm no angel.
 

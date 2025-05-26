@@ -1,0 +1,23 @@
+---
+title: 'Object-Oriented Backstory'
+description: 'A lot of programming languages from OOP to FP'
+pubDate: 'Apr 01 2025'
+heroImage: '/blog-placeholder-3.jpg'
+tags: ['rant']
+collection: 'tools-and-productivity'
+order: 1
+---
+
+When I have been starting with my adventure with programming I have been starting out from #Object-Oriented programming languages (#Java) as this was language closest to #Minecraft for which I been doing my own server. So there was born familiarity into object orientation in my life, back then I was around 13-15 years old (age aren't excuse for stupidity but it was what it was). I have come into #JavaScript when I was 17 and then #TypeScript which have been my primary weapon of choice up to around 2023 where I have resigned from lead back-end developer position by confusion that gathered inside my mind when it comes to programming.
+
+Before I become Lead/Senior there was a Senior Software Architect which have been dictating the way application should be developed, although none of decisions taken seem to have logical reasoning - nothing more than do this way, do this that way. I know personally that I been using #Object-Oriented in #TypeScript in order to have `class User` where validation happen in constructor, mostly because #WeakTyping and lack of #RuntimeTypes in TypeScript which makes software hard to ensure validated and correct data structures that are flowing through logic, so were all #DesignPatterns that I was using at the time (#Strategy, #DomainModel, #Builder, #Decorator, #Observable etc.) - however, I been pulled off from this approach into "making code look the same" and "making things scalable and portable" where none of values to which ones were holding were realized, I would rather state that one's actions been quite the opposite.
+
+What is porting of #IdentityAndAccessManagementIam component and over-design password-less authentication to thousands of lines with four different AWS services whose implementation took me month and writing password-less authentication by hand is top of week considering I would be doing this during blackout, representing three conditional statements with #Specification pattern just to eventually lose #TypeSafety as with overuse of objects it's almost impossible to attend #TypeNarrowing. Just looking at the #ValueObject from #DomainDrivenDesignDdd which in TS can be represented by #BrandedType and factory function like `type Email` and `email(val: unknown): val is Email` - instead you are greet with most obscure way to what TS is, something that I suppose was supposed to be `data class` from `Scala` or `Kotlin`, which would be correct implementation but **not in TypeScript**.
+
+But! When I import `neverthrow` (the most hated monads for elitistic devs) or just to try to represent #FiniteStateMachineFsm on type-system instead defining separate class for each state with #Inheritance from base class, suddenly I am the one who is over-complicating things as you could just type it as `any` and "would work" - sure, but then same people are implementing ten queries to database for three months and crying on dependency injection as being over-complicated.
+
+My point is, I am not a fan of #FunctionalProgramming and never was - but when reality of #ObjectOrientedProgramming looks like ones from mine experience I feel like I don't have choice. I cannot mentally stand any single developer who will argue with me about rewriting 75k LoC software over the weekend into PHP yet meanwhile not taking smallest attention to maintaining semantics and semi-decent types what outcome of calculation are. Combine this with massive amounts of #Gaslighting where no-one ever rationally explained to me why one is doing something this way not another - it always comes down to some guru's blog post, conference or course that one bought and believed is ascended so logic doesn't apply to him.
+
+I will not place a bet of my personal #Burnout by just touching codebases like these and decide to find my place somewhere else, if someone really think that spending week searching which variable unexpectly mutates in codebase where every function is dirty and mutate state through side-effects - good luck! Live your life this kind of way, I have been there on my own from #Freelance, through #Internship, #Full-Time, Contracting and ending up at #Leadership positions in matter of two years - but none of this recompensate lack of care ones are representing towards software. Therefore I come down to decision to spend a little more time on learning and pivot towards #FunctionalProgramming or eventually #LowLevelProgramming as both of these places seems to scary normies in own unique way, one have #Monad - second have #Ownership or #Pointers.
+
+~ keinsell
