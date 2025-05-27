@@ -1,0 +1,6 @@
+[submodule "neuronek-cli"]
+	path = apps/neuronek/cli
+	url = https://github.com/keinsell/neuronek-cli
+[submodule "neuronek-desktop"]
+	path = apps/neuronek/desktop
+	url = https://github.com/keinsell/neuronek-desktop
