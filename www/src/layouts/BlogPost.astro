@@ -1,64 +1,200 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import FormattedDate from '../components/FormattedDate.astro';
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/NavigationBar.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<"blog">["data"];
 
 const { title, description, pubDate, updatedDate, tags } = Astro.props;
 ---
 
 <html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-	</head>
+    <head>
+        <BaseHead title={title} description={description} />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+            }
+            .content {
+                padding: 10px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            h1 {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .meta {
+                font-size: 11px;
+                color: #666;
+                margin-bottom: 20px;
+            }
+            .tags {
+                margin-top: 5px;
+            }
+            .tags span {
+                margin-right: 10px;
+            }
+            .prose {
+                font-size: 12px;
+                line-height: 1.6;
+            }
+            .prose h2 {
+                font-size: 14px;
+                font-weight: bold;
+                margin: 20px 0 10px 0;
+            }
+            .prose h3 {
+                font-size: 12px;
+                font-weight: bold;
+                margin: 15px 0 8px 0;
+            }
+            .prose p {
+                margin-bottom: 10px;
+            }
+            .prose pre {
+                background: #f5f5f5;
+                padding: 10px;
+                overflow-x: auto;
+                margin: 10px 0;
+                font-size: 11px;
+            }
+            .prose code {
+                background: #f5f5f5;
+                padding: 1px 3px;
+                font-size: 11px;
+            }
+            .prose a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .prose a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .prose ul,
+            .prose ol {
+                margin-left: 20px;
+                margin-bottom: 10px;
+            }
+            .prose li {
+                margin-bottom: 3px;
+            }
+            .prose blockquote {
+                border-left: 3px solid #ccc;
+                padding-left: 10px;
+                margin: 10px 0;
+                color: #666;
+            }
+            .footer {
+                margin-top: 40px;
+                padding-top: 10px;
+                border-top: 1px solid #ccc;
+                font-size: 11px;
+                color: #666;
+            }
+            .back-link {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .back-link:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
 
-	<body>
-		<Header />
-		<div class="container mx-auto max-w-2xl px-6 py-8">
-			
-			<article>
-				<div class="mb-8">
-					<h1 class="text-2xl font-semibold mb-2">{title}</h1>
-					
-					<div class="text-sm text-muted-foreground mb-2">
-						<FormattedDate date={pubDate} />
-						{updatedDate && (
-							<span> | Updated <FormattedDate date={updatedDate} /></span>
-						)}
-					</div>
-					
-					{tags && tags.length > 0 && (
-						<div class="text-xs text-muted-foreground mb-2">
-							{tags.map(tag => (
-								<span class="mr-2">{tag}</span>
-							))}
-						</div>
-					)}
-					
-					{description && (
-						<div class="text-sm text-muted-foreground mb-4">{description}</div>
-					)}
-				</div>
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+                .meta {
+                    color: #999;
+                }
+                .prose pre {
+                    background: #222;
+                }
+                .prose code {
+                    background: #222;
+                }
+                .prose a {
+                    color: #88f;
+                }
+                .prose a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .prose blockquote {
+                    border-color: #444;
+                    color: #999;
+                }
+                .footer {
+                    border-color: #444;
+                    color: #999;
+                }
+                .back-link {
+                    color: #88f;
+                }
+                .back-link:hover {
+                    background: #88f;
+                    color: #000;
+                }
+            }
+        </style>
+    </head>
 
-				<div class="prose prose-sm dark:prose-invert max-w-none">
-					<slot />
-				</div>
+    <body>
+        <Header />
+        <div class="content">
+            <article>
+                <h1>{title}</h1>
 
-				<div class="mt-12 pt-6 border-t border-border text-sm text-muted-foreground">
-					Published <FormattedDate date={pubDate} />
-					{updatedDate && (
-						<span> | Updated <FormattedDate date={updatedDate} /></span>
-					)}
-					<br><br>
-					<a href="/blog" class="text-primary hover:underline">← back to blog</a>
-				</div>
-			</article>
-			
-			<div class="mt-16 pt-6 border-t border-border text-xs text-muted-foreground text-center">
-				&copy; 2025 keinsell | <a href="https://github.com/keinsell" class="hover:text-foreground">github</a> | <a href="https://twitter.com/keinsell" class="hover:text-foreground">twitter</a>
-			</div>
-		</div>
-	</body>
+                <div class="meta">
+                    <FormattedDate date={pubDate} />
+                    {
+                        updatedDate && (
+                            <span>
+                                {" "}
+                                | Updated <FormattedDate date={updatedDate} />
+                            </span>
+                        )
+                    }
+
+                    {
+                        tags && tags.length > 0 && (
+                            <div class="tags">
+                                tags:{" "}
+                                {tags.map((tag, i) => (
+                                    <span>
+                                        {tag}
+                                        {i < tags.length - 1 ? "," : ""}
+                                    </span>
+                                ))}
+                            </div>
+                        )
+                    }
+                </div>
+
+                <div class="prose">
+                    <slot />
+                </div>
+
+                <div class="footer">
+                    <a href="/blog" class="back-link">← back to blog</a>
+                </div>
+            </article>
+        </div>
+    </body>
 </html>

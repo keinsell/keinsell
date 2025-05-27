@@ -1,5 +1,5 @@
 (library
  (name kamel)
  (modules Application Identity User) ; Only top-level modules
- (libraries dream lwt lwt.unix yojson cohttp cohttp-lwt-unix alcotest logs fmt ptime caqti caqti_request)
+ (libraries dream lwt lwt.unix yojson cohttp cohttp-lwt-unix alcotest logs fmt ptime caqti)
 )

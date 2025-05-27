@@ -1,0 +1,292 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/NavigationBar.astro";
+
+export async function getStaticPaths() {
+    const patterns = await getCollection("pattern");
+    const implementations = await getCollection("implementation");
+
+    return patterns.map((pattern) => ({
+        params: { slug: pattern.id },
+        props: {
+            pattern,
+            relatedImplementations: implementations.filter(
+                (impl) => impl.data.pattern === pattern.id,
+            ),
+        },
+    }));
+}
+
+const { pattern, relatedImplementations } = Astro.props;
+const { Content } = await render(pattern);
+---
+
+<html lang="en">
+    <head>
+        <BaseHead
+            title={pattern.data.title}
+            description={pattern.data.description}
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+            }
+            .container {
+                padding: 10px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+                min-height: calc(100vh - 40px);
+            }
+            .breadcrumb {
+                font-size: 11px;
+                margin-bottom: 15px;
+                color: #666;
+            }
+            .breadcrumb a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .breadcrumb a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .pattern-header {
+                margin-bottom: 25px;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 15px;
+            }
+            .pattern-title {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+            .pattern-description {
+                font-size: 13px;
+                color: #666;
+            }
+            .pattern-meta {
+                margin-top: 10px;
+                font-size: 11px;
+                color: #999;
+            }
+            .content {
+                font-size: 13px;
+                line-height: 1.6;
+            }
+            .content h1,
+            .content h2,
+            .content h3 {
+                margin-top: 25px;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+            .content h1 {
+                font-size: 16px;
+            }
+            .content h2 {
+                font-size: 14px;
+            }
+            .content h3 {
+                font-size: 13px;
+            }
+            .content p {
+                margin-bottom: 12px;
+            }
+            .content pre {
+                background: #f5f5f5;
+                padding: 10px;
+                margin: 15px 0;
+                overflow-x: auto;
+                font-size: 11px;
+                border: 1px solid #ddd;
+            }
+            .content code {
+                background: #f5f5f5;
+                padding: 2px 4px;
+                font-size: 11px;
+            }
+            .content ul,
+            .content ol {
+                margin-left: 20px;
+                margin-bottom: 12px;
+            }
+            .implementations-section {
+                margin-top: 40px;
+                border-top: 1px solid #ccc;
+                padding-top: 20px;
+            }
+            .section-title {
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+            .implementation-list {
+                list-style: none;
+            }
+            .implementation-item {
+                margin-bottom: 10px;
+                padding-left: 15px;
+            }
+            .implementation-link {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .implementation-link:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .implementation-meta {
+                font-size: 11px;
+                color: #666;
+                margin-left: 10px;
+            }
+            .footer {
+                margin-top: 40px;
+                font-size: 11px;
+                color: #666;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+            }
+            .footer a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .footer a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+                .breadcrumb {
+                    color: #999;
+                }
+                .breadcrumb a {
+                    color: #88f;
+                }
+                .breadcrumb a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .pattern-header {
+                    border-color: #333;
+                }
+                .pattern-description {
+                    color: #999;
+                }
+                .pattern-meta {
+                    color: #666;
+                }
+                .content pre {
+                    background: #2a2a2a;
+                    border-color: #444;
+                }
+                .content code {
+                    background: #2a2a2a;
+                }
+                .implementations-section {
+                    border-color: #333;
+                }
+                .implementation-link {
+                    color: #88f;
+                }
+                .implementation-link:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .implementation-meta {
+                    color: #999;
+                }
+                .footer {
+                    border-color: #333;
+                    color: #999;
+                }
+                .footer a {
+                    color: #88f;
+                }
+                .footer a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <Header />
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/patterns">Patterns</a> / {pattern.data.title}
+            </div>
+
+            <div class="pattern-header">
+                <h1 class="pattern-title">{pattern.data.title}</h1>
+                <p class="pattern-description">{pattern.data.description}</p>
+                {
+                    pattern.data.category && (
+                        <div class="pattern-meta">
+                            Category: {pattern.data.category}
+                        </div>
+                    )
+                }
+            </div>
+
+            <div class="content">
+                <Content />
+            </div>
+
+            {
+                relatedImplementations.length > 0 && (
+                    <div class="implementations-section">
+                        <h2 class="section-title">Implementations</h2>
+                        <ul class="implementation-list">
+                            {relatedImplementations.map((impl) => (
+                                <li class="implementation-item">
+                                    <a
+                                        href={`/implementations/${impl.id}/`}
+                                        class="implementation-link"
+                                    >
+                                        {impl.data.title}
+                                    </a>
+                                    {(impl.data.language ||
+                                        impl.data.framework) && (
+                                        <span class="implementation-meta">
+                                            (
+                                            {[
+                                                impl.data.language,
+                                                impl.data.framework,
+                                            ]
+                                                .filter(Boolean)
+                                                .join(", ")}
+                                            )
+                                        </span>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )
+            }
+
+            <div class="footer">
+                &copy; 2025 keinsell | <a href="https://github.com/keinsell"
+                    >github</a
+                > | <a href="https://twitter.com/keinsell">twitter</a>
+            </div>
+        </div>
+    </body>
+</html>

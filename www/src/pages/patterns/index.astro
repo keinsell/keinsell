@@ -1,0 +1,178 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/NavigationBar.astro";
+
+const patterns = await getCollection("pattern");
+
+// Group patterns by category
+const categorizedPatterns = patterns.reduce(
+    (acc, pattern) => {
+        const category = pattern.data.category || "Uncategorized";
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(pattern);
+        return acc;
+    },
+    {} as Record<string, typeof patterns>,
+);
+---
+
+<html lang="en">
+    <head>
+        <BaseHead
+            title="Patterns"
+            description="A collection of software design patterns and architectural patterns."
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+            }
+            .container {
+                padding: 10px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+                min-height: calc(100vh - 40px);
+            }
+            .page-title {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+            .category {
+                margin-bottom: 25px;
+            }
+            .category-title {
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 5px;
+            }
+            .pattern-list {
+                list-style: none;
+            }
+            .pattern-item {
+                margin-bottom: 12px;
+                padding-left: 15px;
+            }
+            .pattern-link {
+                color: #0000ff;
+                text-decoration: underline;
+                font-size: 13px;
+            }
+            .pattern-link:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .pattern-description {
+                font-size: 11px;
+                color: #666;
+                margin-top: 2px;
+                padding-left: 15px;
+            }
+            .footer {
+                margin-top: 40px;
+                font-size: 11px;
+                color: #666;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+            }
+            .footer a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .footer a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+                .pattern-link {
+                    color: #88f;
+                }
+                .pattern-link:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .category-title {
+                    border-color: #333;
+                }
+                .pattern-description {
+                    color: #999;
+                }
+                .footer {
+                    border-color: #333;
+                    color: #999;
+                }
+                .footer a {
+                    color: #88f;
+                }
+                .footer a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <Header />
+        <div class="container">
+            <h1 class="page-title">Patterns</h1>
+
+            {
+                Object.entries(categorizedPatterns).map(
+                    ([category, categoryPatterns]) => (
+                        <div class="category">
+                            <h2 class="category-title">{category}</h2>
+                            <ul class="pattern-list">
+                                {categoryPatterns.map((pattern) => (
+                                    <li class="pattern-item">
+                                        <a
+                                            href={`/patterns/${pattern.id}/`}
+                                            class="pattern-link"
+                                        >
+                                            {pattern.data.title}
+                                        </a>
+                                        {pattern.data.description && (
+                                            <div class="pattern-description">
+                                                {pattern.data.description}
+                                            </div>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ),
+                )
+            }
+
+            {
+                patterns.length === 0 && (
+                    <div style="text-align: center; padding: 40px; color: #999; font-size: 12px;">
+                        No patterns found yet.
+                    </div>
+                )
+            }
+
+            <div class="footer">
+                &copy; 2025 keinsell | <a href="https://github.com/keinsell"
+                    >github</a
+                > | <a href="https://twitter.com/keinsell">twitter</a>
+            </div>
+        </div>
+    </body>
+</html>

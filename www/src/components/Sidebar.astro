@@ -1,0 +1,83 @@
+---
+const currentPath = Astro.url.pathname;
+const isBlogPost = currentPath.includes('/blog/') && currentPath !== '/blog/';
+---
+
+<style>
+	.sidebar {
+		font-family: monospace;
+		font-size: 12px;
+		line-height: 1.4;
+		padding: 10px;
+		border-right: 1px solid #ccc;
+		min-height: calc(100vh - 40px);
+	}
+	.sidebar h3 {
+		font-size: 12px;
+		font-weight: bold;
+		margin-bottom: 5px;
+	}
+	.sidebar ul {
+		list-style: none;
+		padding: 0;
+		margin: 0 0 15px 0;
+	}
+	.sidebar li {
+		margin: 2px 0;
+	}
+	.sidebar a {
+		color: #0000ff;
+		text-decoration: underline;
+	}
+	.sidebar a:hover {
+		background: #0000ff;
+		color: #fff;
+		text-decoration: none;
+	}
+	.sidebar a.active {
+		background: #000;
+		color: #fff;
+		text-decoration: none;
+		padding: 0 2px;
+	}
+	
+	@media (prefers-color-scheme: dark) {
+		.sidebar {
+			border-color: #444;
+		}
+		.sidebar a {
+			color: #88f;
+		}
+		.sidebar a:hover {
+			background: #88f;
+			color: #000;
+		}
+		.sidebar a.active {
+			background: #fff;
+			color: #000;
+		}
+	}
+</style>
+
+<aside class="sidebar">
+	<h3>Navigation</h3>
+	<ul>
+		<li><a href="/" class={currentPath === '/' ? 'active' : ''}>home</a></li>
+		<li><a href="/blog" class={currentPath === '/blog' || currentPath === '/blog/' ? 'active' : ''}>blog</a></li>
+		<li><a href="/story" class={currentPath === '/story' || currentPath === '/story/' ? 'active' : ''}>story</a></li>
+		<li><a href="/about" class={currentPath === '/about' || currentPath === '/about/' ? 'active' : ''}>about</a></li>
+	</ul>
+	
+	<h3>Collections</h3>
+	<ul>
+		<li><a href="/tags">tags</a></li>
+		<li><a href="/collections">collections</a></li>
+	</ul>
+	
+	<h3>External</h3>
+	<ul>
+		<li><a href="https://github.com/keinsell">github</a></li>
+		<li><a href="https://twitter.com/keinsell">twitter</a></li>
+		<li><a href="/rss.xml">rss</a></li>
+	</ul>
+</aside>

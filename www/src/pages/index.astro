@@ -1,152 +1,187 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import FormattedDate from '../components/FormattedDate.astro';
+import NavigationBar from "../components/NavigationBar.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-).slice(0, 5);
+const posts = (await getCollection("blog"))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, 5);
 ---
 
 <html lang="en">
     <head>
-        <BaseHead title="keinsell" description="Jakub Olan - Software engineer focused on Rust, OCaml, and building meaningful tools." />
+        <BaseHead
+            title="keinsell"
+            description="Jakub Olan - Software engineer focused on Rust, OCaml, and building meaningful tools."
+        />
         <style>
-			* { margin: 0; padding: 0; box-sizing: border-box; }
-			body {
-				font: 13px/1.4 Verdana, Geneva, sans-serif;
-				color: #000;
-				background: #fff;
-			}
-			a { color: #666; text-decoration: none; }
-			a:hover { text-decoration: underline; }
-			.container { 
-				margin: 20px auto;
-				max-width: 800px;
-				padding: 0 20px;
-			}
-			.intro {
-				margin-bottom: 25px;
-				font-size: 12px;
-				line-height: 1.5;
-			}
-			.intro h1 {
-				font-size: 16px;
-				font-weight: bold;
-				margin-bottom: 8px;
-			}
-			.intro p {
-				margin-bottom: 8px;
-				color: #333;
-			}
-			.intro-links a {
-				color: #666;
-				margin-right: 12px;
-			}
-			.recent {
-				font-size: 13px;
-				font-weight: bold;
-				margin-bottom: 10px;
-			}
-			.stories {
-				border-collapse: collapse;
-				width: 100%;
-			}
-			.story {
-				border-bottom: 1px solid #eee;
-			}
-			.story td {
-				padding: 8px 5px;
-				vertical-align: top;
-			}
-			.story-rank {
-				width: 30px;
-				text-align: right;
-				color: #999;
-				padding-right: 10px;
-				font-size: 11px;
-			}
-			.story-title {
-				font-size: 13px;
-				line-height: 1.3;
-				margin-bottom: 4px;
-			}
-			.story-title a {
-				color: #000;
-			}
-			.story-meta {
-				font-size: 11px;
-				color: #999;
-			}
-			.story-tags {
-				font-size: 10px;
-				margin-top: 2px;
-			}
-			.story-tags span {
-				color: #666;
-				margin-right: 6px;
-			}
-			.footer {
-				margin-top: 40px;
-				font-size: 10px;
-				color: #999;
-				text-align: center;
-				border-top: 1px solid #eee;
-				padding-top: 15px;
-			}
-			@media (prefers-color-scheme: dark) {
-				body { background: #1a1a1a; color: #ccc; }
-				a { color: #999; }
-				.intro p { color: #aaa; }
-				.story-title a { color: #ccc; }
-				.story { border-color: #333; }
-				.footer { border-color: #333; }
-			}
-		</style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+            }
+            .container {
+                margin: 10px;
+                max-width: 800px;
+            }
+            .intro {
+                margin-bottom: 25px;
+                font-size: 12px;
+                line-height: 1.5;
+            }
+            .intro h1 {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .intro p {
+                margin-bottom: 8px;
+                color: #333;
+            }
+            .intro-links a {
+                color: #0000ff;
+                text-decoration: underline;
+                margin-right: 12px;
+            }
+            .intro-links a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .recent {
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                margin-top: 30px;
+            }
+            .stories {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            .story {
+                border-bottom: 1px solid #eee;
+            }
+            .story td {
+                padding: 8px 5px;
+                vertical-align: top;
+            }
+            .story-rank {
+                width: 30px;
+                text-align: right;
+                color: #999;
+                padding-right: 10px;
+                font-size: 11px;
+            }
+            .story-title {
+                font-size: 13px;
+                line-height: 1.3;
+                margin-bottom: 4px;
+            }
+            .story-title a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .story-title a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .story-meta {
+                font-size: 11px;
+                color: #999;
+            }
+            .story-tags {
+                font-size: 10px;
+                margin-top: 2px;
+            }
+            .story-tags span {
+                color: #666;
+                margin-right: 6px;
+            }
+            .footer {
+                margin-top: 40px;
+                font-size: 11px;
+                color: #666;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+            }
+            .footer a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .footer a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+                .intro p {
+                    color: #aaa;
+                }
+                .intro-links a {
+                    color: #88f;
+                }
+                .intro-links a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .story-title a {
+                    color: #88f;
+                }
+                .story-title a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .story {
+                    border-color: #333;
+                }
+                .footer {
+                    border-color: #333;
+                    color: #999;
+                }
+                .footer a {
+                    color: #88f;
+                }
+                .footer a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+            }
+        </style>
     </head>
     <body>
-		<Header />
-		<div class="container">
-			
-			<div class="intro">
-				<h1>keinsell</h1>
-				<p>Software engineer building with Rust and OCaml. I focus on creating tools that matter - from terminal applications that track caffeine intake using neuroscience to exploring the intersection of finance and technology.</p>
-				<p>Currently seeking opportunities where quality is measured by stability and maintainability, not just delivery speed. I'd rather work on meaningful projects with solid foundations than rush features built on shaky ground.</p>
-				<div class="intro-links">
-					<a href="/blog">blog</a>
-					<a href="/story">story</a>
-					<a href="https://github.com/keinsell">github</a>
-				</div>
-			</div>
-
-			<div class="recent">Recent Posts</div>
-			<table class="stories">
-				{posts.map((post, index) => (
-					<tr class="story">
-						<td class="story-rank">{index + 1}.</td>
-						<td>
-							<div class="story-title">
-								<a href={`/blog/${post.id}/`}>{post.data.title}</a>
-							</div>
-							<div class="story-meta">
-								<FormattedDate date={post.data.pubDate} />
-								{post.data.tags && post.data.tags.length > 0 && (
-									<div class="story-tags">
-										{post.data.tags.map(tag => (
-											<span>{tag}</span>
-										))}
-									</div>
-								)}
-							</div>
-						</td>
-					</tr>
-				))}
-			</table>
-			
-			<div class="footer">
-				&copy; 2025 keinsell | <a href="https://github.com/keinsell">github</a> | <a href="https://twitter.com/keinsell">twitter</a>
-			</div>
-		</div>
+        <NavigationBar />
+        <div class="container">
+            <div class="intro">
+                <h1>keinsell</h1>
+                <p>
+                    This website is cutting-edge to the point where it can
+                    dramatically change from day to day, because I didn't
+                    estabilished which kind of content I want to have there.
+                </p>
+                <div class="intro-links">
+                    <a href="/blog">blog</a>
+                    <a href="/story">story</a>
+                    <a href="https://github.com/keinsell">github</a>
+                </div>
+            </div>
+            <div class="footer">
+                &copy; 2025 keinsell | <a href="https://github.com/keinsell"
+                    >github</a
+                > | <a href="https://twitter.com/keinsell">twitter</a>
+            </div>
+        </div>
     </body>
 </html>

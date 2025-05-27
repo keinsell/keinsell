@@ -1,0 +1,63 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<style>
+	.nav-container {
+		margin: 0;
+		padding: 0;
+		font-family: monospace;
+		font-size: 12px;
+		line-height: 1.2;
+	}
+	.nav-wrapper {
+		margin: 10px;
+	}
+	.nav-links {
+		display: inline;
+	}
+	.nav-links a {
+		color: #0000ff;
+		text-decoration: underline;
+		margin-right: 10px;
+	}
+	.nav-links a:hover {
+		background: #0000ff;
+		color: #fff;
+		text-decoration: none;
+	}
+	.nav-links a.active {
+		background: #000;
+		color: #fff;
+		text-decoration: none;
+		padding: 0 2px;
+	}
+	
+	@media (prefers-color-scheme: dark) {
+		.nav-links a {
+			color: #88f;
+		}
+		.nav-links a:hover {
+			background: #88f;
+			color: #000;
+		}
+		.nav-links a.active {
+			background: #fff;
+			color: #000;
+		}
+	}
+</style>
+
+<div class="nav-container">
+	<div class="nav-wrapper">
+		<nav>
+			<div class="nav-links">
+				<a href="/" class={currentPath === '/' ? 'active' : ''}>home</a>
+				<a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>blog</a>
+				<a href="/patterns" class={currentPath.startsWith('/patterns') ? 'active' : ''}>patterns</a>
+				<a href="/story" class={currentPath.startsWith('/story') ? 'active' : ''}>story</a>
+				<a href="/about" class={currentPath.startsWith('/about') ? 'active' : ''}>about</a>
+			</div>
+		</nav>
+	</div>
+</div>

@@ -1,4 +1,15 @@
-# Astro Starter Kit: Blog
+# `www.keinsell.com`
+
+Namespace collecting various digital junk collected since 2016, there's no end-goal what is purpose of this website. I don't really care about self-promotion or building CV-like website as there are pretty much of those at LinkedIn.
+
+## High-Level Architecture
+
+- `/`
+  - Should present author of website
+  - Should inform about activity of author
+
+
+
 
 ```sh
 pnpm create astro@latest -- --template blog

@@ -19,7 +19,8 @@
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.0",
-    "astro": "^5.8.0"
+    "astro": "^5.8.0",
+    "astro-loading-indicator": "^0.7.0"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",

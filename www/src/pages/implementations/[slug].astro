@@ -1,0 +1,291 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/NavigationBar.astro";
+
+export async function getStaticPaths() {
+    const implementations = await getCollection("implementation");
+    const patterns = await getCollection("pattern");
+
+    return implementations.map((implementation) => {
+        const relatedPattern = patterns.find(
+            (p) => p.id === implementation.data.pattern,
+        );
+        return {
+            params: { slug: implementation.id },
+            props: { implementation, relatedPattern },
+        };
+    });
+}
+
+const { implementation, relatedPattern } = Astro.props;
+const { Content } = await render(implementation);
+---
+
+<html lang="en">
+    <head>
+        <BaseHead
+            title={implementation.data.title}
+            description={implementation.data.description}
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+            }
+            .container {
+                padding: 10px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+                min-height: calc(100vh - 40px);
+            }
+            .breadcrumb {
+                font-size: 11px;
+                margin-bottom: 15px;
+                color: #666;
+            }
+            .breadcrumb a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .breadcrumb a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .implementation-header {
+                margin-bottom: 25px;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 15px;
+            }
+            .implementation-title {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+            .implementation-description {
+                font-size: 13px;
+                color: #666;
+            }
+            .implementation-meta {
+                margin-top: 10px;
+                font-size: 11px;
+                color: #999;
+            }
+            .meta-item {
+                margin-right: 15px;
+            }
+            .meta-link {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .meta-link:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .tag {
+                display: inline-block;
+                margin-right: 6px;
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .tag:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .content {
+                font-size: 13px;
+                line-height: 1.6;
+            }
+            .content h1,
+            .content h2,
+            .content h3 {
+                margin-top: 25px;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+            .content h1 {
+                font-size: 16px;
+            }
+            .content h2 {
+                font-size: 14px;
+            }
+            .content h3 {
+                font-size: 13px;
+            }
+            .content p {
+                margin-bottom: 12px;
+            }
+            .content pre {
+                background: #f5f5f5;
+                padding: 10px;
+                margin: 15px 0;
+                overflow-x: auto;
+                font-size: 11px;
+                border: 1px solid #ddd;
+            }
+            .content code {
+                background: #f5f5f5;
+                padding: 2px 4px;
+                font-size: 11px;
+            }
+            .content ul,
+            .content ol {
+                margin-left: 20px;
+                margin-bottom: 12px;
+            }
+            .footer {
+                margin-top: 40px;
+                font-size: 11px;
+                color: #666;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+            }
+            .footer a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .footer a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+                .breadcrumb {
+                    color: #999;
+                }
+                .breadcrumb a {
+                    color: #88f;
+                }
+                .breadcrumb a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .implementation-header {
+                    border-color: #333;
+                }
+                .implementation-description {
+                    color: #999;
+                }
+                .implementation-meta {
+                    color: #666;
+                }
+                .meta-link {
+                    color: #88f;
+                }
+                .meta-link:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .tag {
+                    color: #88f;
+                }
+                .tag:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .content pre {
+                    background: #2a2a2a;
+                    border-color: #444;
+                }
+                .content code {
+                    background: #2a2a2a;
+                }
+                .footer {
+                    border-color: #333;
+                    color: #999;
+                }
+                .footer a {
+                    color: #88f;
+                }
+                .footer a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <Header />
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/implementations">Implementations</a> / {
+                    implementation.data.title
+                }
+            </div>
+
+            <div class="implementation-header">
+                <h1 class="implementation-title">
+                    {implementation.data.title}
+                </h1>
+                <p class="implementation-description">
+                    {implementation.data.description}
+                </p>
+                <div class="implementation-meta">
+                    {
+                        relatedPattern && (
+                            <span class="meta-item">
+                                Pattern:{" "}
+                                <a
+                                    href={`/patterns/${relatedPattern.id}/`}
+                                    class="meta-link"
+                                >
+                                    {relatedPattern.data.title}
+                                </a>
+                            </span>
+                        )
+                    }
+                    {
+                        implementation.data.language && (
+                            <span class="meta-item">
+                                Language: {implementation.data.language}
+                            </span>
+                        )
+                    }
+                    {
+                        implementation.data.framework && (
+                            <span class="meta-item">
+                                Framework: {implementation.data.framework}
+                            </span>
+                        )
+                    }
+                    {
+                        implementation.data.tags &&
+                            implementation.data.tags.length > 0 && (
+                                <div style="margin-top: 8px;">
+                                    Tags:{" "}
+                                    {implementation.data.tags.map((tag) => (
+                                        <span class="tag">{tag}</span>
+                                    ))}
+                                </div>
+                            )
+                    }
+                </div>
+            </div>
+
+            <div class="content">
+                <Content />
+            </div>
+
+            <div class="footer">
+                &copy; 2025 keinsell | <a href="https://github.com/keinsell"
+                    >github</a
+                > | <a href="https://twitter.com/keinsell">twitter</a>
+            </div>
+        </div>
+    </body>
+</html>
