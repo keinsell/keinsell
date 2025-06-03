@@ -1,0 +1,249 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/NavigationBar.astro";
+import { getCollection } from "astro:content";
+
+const allDocs = await getCollection("docs");
+const allTags = new Set();
+allDocs.forEach(doc => {
+    if (doc.data.tags) {
+        doc.data.tags.forEach(tag => allTags.add(tag));
+    }
+});
+---
+
+<html lang="en">
+    <head>
+        <BaseHead
+            title="Wiki - keinsell"
+            description="Personal knowledge base, notes, and reflections on software engineering."
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+            }
+            .container {
+                padding: 10px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+                min-height: calc(100vh - 40px);
+            }
+            .wiki-header {
+                margin-bottom: 20px;
+            }
+            .wiki-header h1 {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 6px;
+            }
+            .wiki-header p {
+                color: #666;
+                font-size: 11px;
+            }
+            .content {
+                font-size: 12px;
+                line-height: 1.6;
+                margin-bottom: 30px;
+            }
+            .content h4 {
+                font-size: 14px;
+                font-weight: bold;
+                margin: 20px 0 8px 0;
+            }
+            .content p {
+                margin-bottom: 10px;
+            }
+            .content em {
+                color: #666;
+            }
+            .content a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .content a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .wiki-list {
+                margin: 20px 0;
+            }
+            .wiki-list h4 {
+                margin-bottom: 10px;
+            }
+            .wiki-list ul {
+                list-style: none;
+                margin-left: 0;
+            }
+            .wiki-list li {
+                margin-bottom: 3px;
+            }
+            .wiki-list a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .wiki-list a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .tags {
+                margin: 20px 0;
+            }
+            .tags h4 {
+                margin-bottom: 10px;
+            }
+            .tag-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .tag {
+                font-size: 10px;
+                padding: 2px 4px;
+                background: #f0f0f0;
+                color: #666;
+                border-radius: 2px;
+            }
+            .footer {
+                margin-top: 40px;
+                font-size: 11px;
+                color: #666;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+            }
+            .footer a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .footer a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+                .wiki-header p {
+                    color: #999;
+                }
+                .content em {
+                    color: #999;
+                }
+                .content a, .wiki-list a {
+                    color: #88f;
+                }
+                .content a:hover, .wiki-list a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .tag {
+                    background: #333;
+                    color: #ccc;
+                }
+                .footer {
+                    border-color: #333;
+                    color: #999;
+                }
+                .footer a {
+                    color: #88f;
+                }
+                .footer a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <Header />
+        <div class="container">
+            <div class="wiki-header">
+                <h1>Knowledge Base</h1>
+                <p>
+                    Personal notes, patterns, and reflections on software engineering and technology.
+                </p>
+            </div>
+
+            <div class="content">
+                <p>
+                    <em>
+                        This is my digital garden - a collection of thoughts, patterns, and 
+                        implementations that I've found useful or interesting. Not everything 
+                        here is polished or complete, but that's the point.
+                    </em>
+                </p>
+
+                <p>
+                    I believe in learning by doing and documenting what I discover. 
+                    These notes serve as both a reference for myself and hopefully 
+                    something useful for others navigating similar problems.
+                </p>
+
+                <div class="wiki-list">
+                    <h4>Recent Notes</h4>
+                    <ul>
+                        {allDocs
+                            .filter(doc => !doc.data.draft)
+                            .sort((a, b) => new Date(b.data.publishedAt || b.data.createdAt || '2024-01-01').getTime() - 
+                                           new Date(a.data.publishedAt || a.data.createdAt || '2024-01-01').getTime())
+                            .slice(0, 10)
+                            .map(doc => (
+                                <li>
+                                    <a href={`/docs/${doc.id}/`}>{doc.data.title}</a>
+                                    {doc.data.description && (
+                                        <span style="color: #666; margin-left: 8px;">
+                                            — {doc.data.description}
+                                        </span>
+                                    )}
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+
+                <div class="wiki-list">
+                    <h4>Browse by Topic</h4>
+                    <ul>
+                        <li><a href="/docs/patterns/">Design Patterns</a> — reusable solutions to common problems</li>
+                        <li><a href="/docs/implementations/">Implementations</a> — code examples and practical applications</li>
+                    </ul>
+                </div>
+
+                {allTags.size > 0 && (
+                    <div class="tags">
+                        <h4>Tags</h4>
+                        <div class="tag-list">
+                            {Array.from(allTags).sort().map(tag => (
+                                <span class="tag">#{tag}</span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <p>
+                    <em>
+                        Navigate using the links above or search for specific topics. 
+                        Everything is interconnected through wikilinks and tags.
+                    </em>
+                </p>
+            </div>
+
+            <div class="footer">
+                &copy; 2025 keinsell | <a href="https://github.com/keinsell">github</a> | 
+                <a href="https://twitter.com/keinsell">twitter</a>
+            </div>
+        </div>
+    </body>
+</html>

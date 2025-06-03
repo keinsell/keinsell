@@ -1,0 +1,443 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/NavigationBar.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const allDocs = await getCollection("docs");
+  const paths = [];
+  
+  // Generate paths for all actual content files
+  allDocs.forEach(doc => {
+    if (!doc.data.draft) {
+      paths.push({
+        params: { slug: doc.id },
+        props: { doc, isContent: true, isIndex: false }
+      });
+    }
+  });
+  
+  // Generate paths for directory index pages
+  const directories = new Set<string>();
+  allDocs.forEach(doc => {
+    const parts = doc.id.split('/');
+    for (let i = 1; i <= parts.length - 1; i++) {
+      const dirPath = parts.slice(0, i).join('/');
+      directories.add(dirPath);
+    }
+  });
+  
+  directories.forEach(dirPath => {
+    paths.push({
+      params: { slug: dirPath },
+      props: { 
+        directoryPath: dirPath, 
+        isContent: false, 
+        isIndex: true,
+        allDocs 
+      }
+    });
+  });
+  
+  return paths;
+}
+
+const { slug } = Astro.params;
+const { doc, directoryPath, isContent, isIndex, allDocs } = Astro.props;
+
+// Generate simple breadcrumbs
+function generateBreadcrumbs(slug: string) {
+  const parts = slug.split('/');
+  const breadcrumbs = [{ name: 'wiki', url: '/docs/' }];
+  
+  for (let i = 0; i < parts.length; i++) {
+    const path = parts.slice(0, i + 1).join('/');
+    const name = parts[i];
+    const url = `/docs/${path}/`;
+    breadcrumbs.push({ name, url });
+  }
+  
+  return breadcrumbs;
+}
+
+const breadcrumbs = generateBreadcrumbs(slug);
+
+// Get directory contents if needed
+function getDirectoryContents(directoryPath: string, docs: any[]) {
+  const childDocs = docs.filter(doc => {
+    const docParts = doc.id.split('/');
+    const dirParts = directoryPath.split('/');
+    return docParts.length === dirParts.length + 1 && 
+           docParts.slice(0, dirParts.length).join('/') === directoryPath;
+  });
+  
+  const subdirSet = new Set<string>();
+  docs.forEach(doc => {
+    const docParts = doc.id.split('/');
+    const dirParts = directoryPath.split('/');
+    if (docParts.length > dirParts.length + 1 && 
+        docParts.slice(0, dirParts.length).join('/') === directoryPath) {
+      const subdir = docParts.slice(0, dirParts.length + 1).join('/');
+      subdirSet.add(subdir);
+    }
+  });
+  
+  return {
+    childDocs,
+    subdirectories: Array.from(subdirSet)
+  };
+}
+
+// Directory index page variables
+let directoryName = '';
+let childDocs = [];
+let subdirectories = [];
+
+// If it's a directory index page
+if (isIndex && directoryPath) {
+  const contents = getDirectoryContents(directoryPath, allDocs);
+  childDocs = contents.childDocs;
+  subdirectories = contents.subdirectories;
+  directoryName = directoryPath.split('/').pop() || 'docs';
+}
+---
+
+<html lang="en">
+    <head>
+        <BaseHead
+            title={isContent ? `${doc.data.title} - Wiki` : `${directoryName?.charAt(0).toUpperCase() + directoryName?.slice(1)} - Wiki`}
+            description={isContent ? doc.data.description || doc.data.title : `Browse ${directoryName} content and resources.`}
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+            }
+            .container {
+                padding: 10px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+                min-height: calc(100vh - 40px);
+            }
+            .breadcrumb {
+                font-size: 11px;
+                margin-bottom: 15px;
+                color: #666;
+            }
+            .breadcrumb a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .breadcrumb a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .content {
+                font-size: 12px;
+                line-height: 1.6;
+                margin-bottom: 30px;
+            }
+            .content h1 {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .content h2 {
+                font-size: 14px;
+                font-weight: bold;
+                margin: 20px 0 8px 0;
+            }
+            .content h3 {
+                font-size: 13px;
+                font-weight: bold;
+                margin: 15px 0 6px 0;
+            }
+            .content h4 {
+                font-size: 12px;
+                font-weight: bold;
+                margin: 10px 0 4px 0;
+            }
+            .content p {
+                margin-bottom: 10px;
+            }
+            .content em {
+                color: #666;
+            }
+            .content a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .content a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .content ul, .content ol {
+                margin-left: 20px;
+                margin-bottom: 10px;
+            }
+            .content li {
+                margin-bottom: 3px;
+            }
+            .tags {
+                margin: 15px 0;
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            .tag {
+                font-size: 10px;
+                padding: 2px 4px;
+                background: #f0f0f0;
+                color: #666;
+                border-radius: 2px;
+            }
+            .related-pages {
+                margin: 20px 0;
+                padding: 15px;
+                background: #f9f9f9;
+                border: 1px solid #eee;
+            }
+            .related-pages h3 {
+                margin-bottom: 10px;
+                font-size: 13px;
+            }
+            .related-pages ul {
+                margin-left: 0;
+                list-style: none;
+            }
+            .related-pages li {
+                margin-bottom: 3px;
+            }
+            .related-pages a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .related-pages a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .directory-list {
+                margin: 20px 0;
+            }
+            .directory-list h2 {
+                margin-bottom: 15px;
+            }
+            .directory-list ul {
+                list-style: none;
+                margin-left: 0;
+            }
+            .directory-list li {
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #eee;
+            }
+            .directory-list li:last-child {
+                border-bottom: none;
+            }
+            .directory-list a {
+                color: #0000ff;
+                text-decoration: underline;
+                font-weight: bold;
+            }
+            .directory-list a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            .description {
+                color: #666;
+                margin-top: 4px;
+            }
+            .footer {
+                margin-top: 40px;
+                font-size: 11px;
+                color: #666;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+            }
+            .footer a {
+                color: #0000ff;
+                text-decoration: underline;
+            }
+            .footer a:hover {
+                background: #0000ff;
+                color: #fff;
+                text-decoration: none;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+                .breadcrumb {
+                    color: #999;
+                }
+                .breadcrumb a {
+                    color: #88f;
+                }
+                .breadcrumb a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .content em {
+                    color: #999;
+                }
+                .content a, .related-pages a, .directory-list a {
+                    color: #88f;
+                }
+                .content a:hover, .related-pages a:hover, .directory-list a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+                .tag {
+                    background: #333;
+                    color: #ccc;
+                }
+                .related-pages {
+                    background: #222;
+                    border-color: #333;
+                }
+                .directory-list li {
+                    border-color: #333;
+                }
+                .description {
+                    color: #999;
+                }
+                .footer {
+                    border-color: #333;
+                    color: #999;
+                }
+                .footer a {
+                    color: #88f;
+                }
+                .footer a:hover {
+                    background: #88f;
+                    color: #000;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <Header />
+        <div class="container">
+            <div class="breadcrumb">
+                {breadcrumbs.map((crumb, index) => (
+                    <span>
+                        {index > 0 && ' / '}
+                        {index === breadcrumbs.length - 1 ? (
+                            crumb.name
+                        ) : (
+                            <a href={crumb.url}>{crumb.name}</a>
+                        )}
+                    </span>
+                ))}
+            </div>
+
+            {isContent && doc ? (
+                <!-- Content Page Layout -->
+                <div class="content">
+                    <h1>{doc.data.title}</h1>
+                    
+                    {doc.data.description && (
+                        <p class="description">{doc.data.description}</p>
+                    )}
+                    
+                    <!-- Tags -->
+                    {doc.data.tags && doc.data.tags.length > 0 && (
+                        <div class="tags">
+                            {doc.data.tags.map(tag => (
+                                <span class="tag">#{tag}</span>
+                            ))}
+                        </div>
+                    )}
+                    
+                    <!-- Main content placeholder -->
+                    <div class="markdown-content">
+                        <p><em>Content will be rendered here when Astro content rendering is properly configured.</em></p>
+                    </div>
+                    
+                    <!-- Related pages -->
+                    {doc.data.relatedPages && doc.data.relatedPages.length > 0 && (
+                        <div class="related-pages">
+                            <h3>Related Pages</h3>
+                            <ul>
+                                {doc.data.relatedPages.map(pageId => (
+                                    <li><a href={`/docs/${pageId}/`}>{pageId}</a></li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <!-- Directory Index Layout -->
+                <div class="content">
+                    <h1>{directoryName?.charAt(0).toUpperCase() + directoryName?.slice(1)}</h1>
+                    
+                    <!-- Subdirectories -->
+                    {subdirectories && subdirectories.length > 0 && (
+                        <div class="directory-list">
+                            <h2>Categories</h2>
+                            <ul>
+                                {subdirectories.map(subdir => {
+                                    const subdirName = subdir.split('/').pop();
+                                    const subdirContents = getDirectoryContents(subdir, allDocs);
+                                    return (
+                                        <li>
+                                            <a href={`/docs/${subdir}/`}>{subdirName?.charAt(0).toUpperCase() + subdirName?.slice(1)}</a>
+                                            <div class="description">{subdirContents.childDocs.length} item{subdirContents.childDocs.length !== 1 ? 's' : ''}</div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
+                    
+                    <!-- Direct child documents -->
+                    {childDocs && childDocs.length > 0 && (
+                        <div class="directory-list">
+                            <h2>{subdirectories && subdirectories.length > 0 ? 'Pages' : 'Contents'}</h2>
+                            <ul>
+                                {childDocs
+                                    .filter(doc => !doc.data.draft)
+                                    .sort((a, b) => (a.data.sidebar?.order || 999) - (b.data.sidebar?.order || 999))
+                                    .map(doc => (
+                                        <li>
+                                            <a href={`/docs/${doc.id}/`}>{doc.data.sidebar?.label || doc.data.title}</a>
+                                            {doc.data.description && (
+                                                <div class="description">{doc.data.description}</div>
+                                            )}
+                                            {doc.data.tags && (
+                                                <div class="tags">
+                                                    {doc.data.tags.slice(0, 3).map(tag => (
+                                                        <span class="tag">#{tag}</span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            <div class="footer">
+                &copy; 2025 keinsell | <a href="https://github.com/keinsell">github</a> | 
+                <a href="https://twitter.com/keinsell">twitter</a> | 
+                <a href="/docs/">wiki</a>
+            </div>
+        </div>
+    </body>
+</html>
