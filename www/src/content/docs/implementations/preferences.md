@@ -1,9 +1,18 @@
 ---
-title: "User Preferences Facade"
+title: "Preferences"
 description: "Implementation of the Facade pattern for managing user preferences like theme settings"
 pattern: "fasade"
+category: "best-practices"
+subcategory: "code-quality"
 language: "TypeScript"
-tags: ["preferences", "settings", "theme"]
+framework: "Node.js"
+tags: ["typescript", "nodejs", "intermediate", "encapsulation", "web"]
+relatedPages: ["patterns/fasade"]
+sidebar:
+  hidden: false
+  order: 1
+  label: "User Preferences Facade"
+lastModified: 2025-01-03
 ---
 
 <!-- Document explaining implementation of fasade pattern which is contained under "pattern" collection -->

@@ -33,32 +33,40 @@ const story = defineCollection({
   }),
 });
 
-const pattern = defineCollection({
-  loader: glob({ base: "./src/content/pattern", pattern: "**/*.{md,mdx}" }),
+const docs = defineCollection({
+  loader: glob({ base: "./src/content/docs", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
     title: z.string(),
-    description: z.string(),
-    category: z.string().optional(),
-    relatedPatterns: z.array(z.string()).optional(),
-    implementations: z.array(z.string()).optional(),
-  }),
-});
+    description: z.string().optional(),
 
-const implementation = defineCollection({
-  loader: glob({ base: "./src/content/implementation", pattern: "**/*.{md,mdx}" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pattern: z.string(),
+    // Simple tagging system
+    tags: z.array(z.string()).optional(),
+
+    // Basic relationships for wikilinks
+    relatedPages: z.array(z.string()).optional(),
+
+    // Optional technical metadata
     language: z.string().optional(),
     framework: z.string().optional(),
-    tags: z.array(z.string()).optional(),
+
+    // Navigation and display
+    sidebar: z
+      .object({
+        hidden: z.boolean().optional(),
+        label: z.string().optional(),
+        order: z.number().optional(),
+      })
+      .optional(),
+
+    // Meta information
+    publishedAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    draft: z.boolean().optional(),
   }),
 });
 
 export const collections = {
   blog,
   story,
-  pattern,
-  implementation,
+  docs,
 };

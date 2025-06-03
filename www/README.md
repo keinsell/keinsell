@@ -7,6 +7,8 @@ Namespace collecting various digital junk collected since 2016, there's no end-g
 - `/`
   - Should present author of website
   - Should inform about activity of author
+- `/taste`
+  - Should provide nicely designed page that would use `technologies` collection
 
 
 
