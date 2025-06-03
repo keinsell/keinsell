@@ -4,3 +4,6 @@
 [submodule "neuronek-desktop"]
 	path = apps/neuronek/desktop
 	url = https://github.com/keinsell/neuronek-desktop
+[submodule "bikeramp"]
+	path = apps/bikeramp
+	url = https://github.com/keinsell/bikeramp
