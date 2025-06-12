@@ -23,6 +23,9 @@ importers:
       astro:
         specifier: ^5.8.0
         version: 5.8.0(@types/node@22.15.21)(jiti@1.21.7)(rollup@4.41.0)(typescript@5.8.3)(yaml@2.8.0)
+      astro-loading-indicator:
+        specifier: ^0.7.0
+        version: 0.7.0(astro@5.8.0(@types/node@22.15.21)(jiti@1.21.7)(rollup@4.41.0)(typescript@5.8.3)(yaml@2.8.0))
     devDependencies:
       '@astrojs/tailwind':
         specifier: ^6.0.2
@@ -718,6 +721,11 @@ packages:
   astring@1.9.0:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
+
+  astro-loading-indicator@0.7.0:
+    resolution: {integrity: sha512-oNSUYbHq8Aaol0zcVuBzGz+qrqKsviOvKl1xaaKo3DLkEef7HCzHQAgTgWv4lB1iYFWa5GaieQvlxBO4KjzKZg==}
+    peerDependencies:
+      astro: ^4.0.0 || ^5.0.0
 
   astro@5.8.0:
     resolution: {integrity: sha512-G57ELkdIntDiSrucA5lQaRtBOjquaZ9b9NIwoz2f471ZuuJcynLjWgItgBzlrz5UMY4WqnFbVWUCKlJb7nt9bA==}
@@ -2829,6 +2837,10 @@ snapshots:
       printable-characters: 1.0.42
 
   astring@1.9.0: {}
+
+  astro-loading-indicator@0.7.0(astro@5.8.0(@types/node@22.15.21)(jiti@1.21.7)(rollup@4.41.0)(typescript@5.8.3)(yaml@2.8.0)):
+    dependencies:
+      astro: 5.8.0(@types/node@22.15.21)(jiti@1.21.7)(rollup@4.41.0)(typescript@5.8.3)(yaml@2.8.0)
 
   astro@5.8.0(@types/node@22.15.21)(jiti@1.21.7)(rollup@4.41.0)(typescript@5.8.3)(yaml@2.8.0):
     dependencies:
