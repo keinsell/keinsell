@@ -1,6 +1,5 @@
 ---
 const currentPath = Astro.url.pathname;
-const isBlogPost = currentPath.includes('/blog/') && currentPath !== '/blog/';
 ---
 
 <style>
@@ -40,7 +39,7 @@ const isBlogPost = currentPath.includes('/blog/') && currentPath !== '/blog/';
 		text-decoration: none;
 		padding: 0 2px;
 	}
-	
+
 	@media (prefers-color-scheme: dark) {
 		.sidebar {
 			border-color: #444;
@@ -63,21 +62,17 @@ const isBlogPost = currentPath.includes('/blog/') && currentPath !== '/blog/';
 	<h3>Navigation</h3>
 	<ul>
 		<li><a href="/" class={currentPath === '/' ? 'active' : ''}>home</a></li>
-		<li><a href="/blog" class={currentPath === '/blog' || currentPath === '/blog/' ? 'active' : ''}>blog</a></li>
-		<li><a href="/story" class={currentPath === '/story' || currentPath === '/story/' ? 'active' : ''}>story</a></li>
-		<li><a href="/about" class={currentPath === '/about' || currentPath === '/about/' ? 'active' : ''}>about</a></li>
 	</ul>
-	
+
 	<h3>Collections</h3>
 	<ul>
 		<li><a href="/tags">tags</a></li>
 		<li><a href="/collections">collections</a></li>
 	</ul>
-	
+
 	<h3>External</h3>
 	<ul>
 		<li><a href="https://github.com/keinsell">github</a></li>
 		<li><a href="https://twitter.com/keinsell">twitter</a></li>
-		<li><a href="/rss.xml">rss</a></li>
 	</ul>
 </aside>

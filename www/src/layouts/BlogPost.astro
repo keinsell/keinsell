@@ -1,200 +1,217 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/NavigationBar.astro";
-import FormattedDate from "../components/FormattedDate.astro";
+import BaseHead from '../components/BaseHead.astro';
+import NavigationBar from '../components/NavigationBar.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 
-type Props = CollectionEntry<"blog">["data"];
+export interface Props {
+	content: {
+		title: string;
+		description?: string;
+		pubDate: Date;
+		updatedDate?: Date;
+		heroImage?: string;
+	};
+}
 
-const { title, description, pubDate, updatedDate, tags } = Astro.props;
+const {
+	content: { title, description, pubDate, updatedDate, heroImage }
+} = Astro.props;
 ---
 
 <html lang="en">
-    <head>
-        <BaseHead title={title} description={description} />
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            body {
-                font-family: monospace;
-                font-size: 12px;
-                line-height: 1.4;
-                color: #000;
-                background: #fff;
-            }
-            .content {
-                padding: 10px 20px;
-                max-width: 800px;
-                margin: 0 auto;
-            }
-            h1 {
-                font-size: 16px;
-                font-weight: bold;
-                margin-bottom: 10px;
-            }
-            .meta {
-                font-size: 11px;
-                color: #666;
-                margin-bottom: 20px;
-            }
-            .tags {
-                margin-top: 5px;
-            }
-            .tags span {
-                margin-right: 10px;
-            }
-            .prose {
-                font-size: 12px;
-                line-height: 1.6;
-            }
-            .prose h2 {
-                font-size: 14px;
-                font-weight: bold;
-                margin: 20px 0 10px 0;
-            }
-            .prose h3 {
-                font-size: 12px;
-                font-weight: bold;
-                margin: 15px 0 8px 0;
-            }
-            .prose p {
-                margin-bottom: 10px;
-            }
-            .prose pre {
-                background: #f5f5f5;
-                padding: 10px;
-                overflow-x: auto;
-                margin: 10px 0;
-                font-size: 11px;
-            }
-            .prose code {
-                background: #f5f5f5;
-                padding: 1px 3px;
-                font-size: 11px;
-            }
-            .prose a {
-                color: #0000ff;
-                text-decoration: underline;
-            }
-            .prose a:hover {
-                background: #0000ff;
-                color: #fff;
-                text-decoration: none;
-            }
-            .prose ul,
-            .prose ol {
-                margin-left: 20px;
-                margin-bottom: 10px;
-            }
-            .prose li {
-                margin-bottom: 3px;
-            }
-            .prose blockquote {
-                border-left: 3px solid #ccc;
-                padding-left: 10px;
-                margin: 10px 0;
-                color: #666;
-            }
-            .footer {
-                margin-top: 40px;
-                padding-top: 10px;
-                border-top: 1px solid #ccc;
-                font-size: 11px;
-                color: #666;
-            }
-            .back-link {
-                color: #0000ff;
-                text-decoration: underline;
-            }
-            .back-link:hover {
-                background: #0000ff;
-                color: #fff;
-                text-decoration: none;
-            }
-
-            @media (prefers-color-scheme: dark) {
-                body {
-                    background: #1a1a1a;
-                    color: #ccc;
-                }
-                .meta {
-                    color: #999;
-                }
-                .prose pre {
-                    background: #222;
-                }
-                .prose code {
-                    background: #222;
-                }
-                .prose a {
-                    color: #88f;
-                }
-                .prose a:hover {
-                    background: #88f;
-                    color: #000;
-                }
-                .prose blockquote {
-                    border-color: #444;
-                    color: #999;
-                }
-                .footer {
-                    border-color: #444;
-                    color: #999;
-                }
-                .back-link {
-                    color: #88f;
-                }
-                .back-link:hover {
-                    background: #88f;
-                    color: #000;
-                }
-            }
-        </style>
-    </head>
-
-    <body>
-        <Header />
-        <div class="content">
-            <article>
-                <h1>{title}</h1>
-
-                <div class="meta">
-                    <FormattedDate date={pubDate} />
-                    {
-                        updatedDate && (
-                            <span>
-                                {" "}
-                                | Updated <FormattedDate date={updatedDate} />
-                            </span>
-                        )
-                    }
-
-                    {
-                        tags && tags.length > 0 && (
-                            <div class="tags">
-                                tags:{" "}
-                                {tags.map((tag, i) => (
-                                    <span>
-                                        {tag}
-                                        {i < tags.length - 1 ? "," : ""}
-                                    </span>
-                                ))}
-                            </div>
-                        )
-                    }
-                </div>
-
-                <div class="prose">
-                    <slot />
-                </div>
-
-                <div class="footer">
-                    <a href="/blog" class="back-link">← back to blog</a>
-                </div>
-            </article>
-        </div>
-    </body>
+	<head>
+		<BaseHead title={title} description={description ?? ""} />
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			body {
+				font-family: monospace;
+				font-size: 12px;
+				line-height: 1.4;
+				color: #000;
+				background: #fff;
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+			.container {
+				padding: 10px 20px;
+				max-width: 800px;
+				margin: 0 auto;
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+			}
+			.blog-header {
+				margin-bottom: 30px;
+				padding-bottom: 20px;
+				border-bottom: 1px solid #ccc;
+			}
+			.blog-header h1 {
+				font-size: 24px;
+				font-weight: bold;
+				margin-bottom: 10px;
+				line-height: 1.2;
+			}
+			.blog-meta {
+				font-size: 11px;
+				color: #666;
+				margin-bottom: 10px;
+			}
+			.blog-description {
+				font-size: 13px;
+				color: #333;
+				font-style: italic;
+			}
+			.blog-content {
+				font-size: 13px;
+				line-height: 1.6;
+				margin-bottom: 40px;
+			}
+			.blog-content h1,
+			.blog-content h2,
+			.blog-content h3,
+			.blog-content h4,
+			.blog-content h5,
+			.blog-content h6 {
+				margin: 25px 0 15px 0;
+				font-weight: bold;
+			}
+			.blog-content h1 {
+				font-size: 20px;
+			}
+			.blog-content h2 {
+				font-size: 18px;
+			}
+			.blog-content h3 {
+				font-size: 16px;
+			}
+			.blog-content p {
+				margin-bottom: 15px;
+			}
+			.blog-content strong {
+				font-weight: bold;
+			}
+			.blog-content em {
+				font-style: italic;
+			}
+			.blog-content a {
+				color: #0000ff;
+				text-decoration: underline;
+			}
+			.blog-content a:hover {
+				background: #0000ff;
+				color: #fff;
+				text-decoration: none;
+			}
+			.blog-content blockquote {
+				border-left: 3px solid #ccc;
+				padding-left: 15px;
+				margin: 20px 0;
+				color: #666;
+				font-style: italic;
+			}
+			.blog-content code {
+				background: #f5f5f5;
+				padding: 2px 4px;
+				border-radius: 2px;
+				font-family: monospace;
+				font-size: 11px;
+			}
+			.blog-content pre {
+				background: #f5f5f5;
+				padding: 15px;
+				border-radius: 4px;
+				overflow-x: auto;
+				margin: 20px 0;
+			}
+			.blog-content pre code {
+				background: none;
+				padding: 0;
+			}
+			.back-link {
+				margin-bottom: 20px;
+			}
+			.back-link a {
+				color: #0000ff;
+				text-decoration: underline;
+				font-size: 12px;
+			}
+			.back-link a:hover {
+				background: #0000ff;
+				color: #fff;
+				text-decoration: none;
+			}
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: #1a1a1a;
+					color: #ccc;
+				}
+				.blog-header {
+					border-color: #333;
+				}
+				.blog-meta {
+					color: #999;
+				}
+				.blog-description {
+					color: #aaa;
+				}
+				.blog-content a {
+					color: #88f;
+				}
+				.blog-content a:hover {
+					background: #88f;
+					color: #000;
+				}
+				.blog-content blockquote {
+					border-color: #333;
+					color: #999;
+				}
+				.blog-content code {
+					background: #2a2a2a;
+					color: #ccc;
+				}
+				.blog-content pre {
+					background: #2a2a2a;
+				}
+				.back-link a {
+					color: #88f;
+				}
+				.back-link a:hover {
+					background: #88f;
+					color: #000;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<NavigationBar />
+		<div class="container">
+			<div class="back-link">
+				<a href="/blog">← Back to Blog</a>
+			</div>
+			<article>
+				<div class="blog-header">
+					<h1>{title}</h1>
+					<div class="blog-meta">
+						<FormattedDate date={pubDate} />
+						{updatedDate && (
+							<span>
+								(Updated: <FormattedDate date={updatedDate} />)
+							</span>
+						)}
+					</div>
+					{description && (
+						<div class="blog-description">{description}</div>
+					)}
+				</div>
+				<div class="blog-content">
+					<slot />
+				</div>
+			</article>
+		</div>
+	</body>
 </html>

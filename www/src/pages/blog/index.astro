@@ -1,254 +1,198 @@
 ---
-import { getCollection } from "astro:content";
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/NavigationBar.astro";
-import FormattedDate from "../../components/FormattedDate.astro";
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import NavigationBar from '../../components/NavigationBar.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
 
-const posts = (await getCollection("blog")).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-
-// Get all unique tags
-const allTags = [
-    ...new Set(posts.flatMap((post) => post.data.tags || [])),
-].sort();
-
-// Get selected tag from URL params
-const selectedTag = Astro.url.searchParams.get("tag");
-const filteredPosts = selectedTag
-    ? posts.filter((post) => post.data.tags?.includes(selectedTag))
-    : posts;
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <html lang="en">
-    <head>
-        <BaseHead
-            title="Blog"
-            description="My thoughts and writings on technology, development, and more."
-        />
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            body {
-                font-family: monospace;
-                font-size: 12px;
-                line-height: 1.4;
-                color: #000;
-                background: #fff;
-            }
-            .container {
-                padding: 10px 20px;
-                max-width: 800px;
-                margin: 0 auto;
-                min-height: calc(100vh - 40px);
-            }
-            .page-title {
-                font-size: 16px;
-                font-weight: bold;
-                margin-bottom: 10px;
-            }
-            .tags {
-                margin-bottom: 15px;
-                font-size: 11px;
-            }
-            .tag {
-                margin-right: 8px;
-                color: #0000ff;
-                text-decoration: underline;
-            }
-            .tag:hover {
-                background: #0000ff;
-                color: #fff;
-                text-decoration: none;
-            }
-            .tag.active {
-                background: #000;
-                color: #fff;
-                text-decoration: none;
-                padding: 0 2px;
-            }
-            .stories {
-                border-collapse: collapse;
-                width: 100%;
-            }
-            .story {
-                border-bottom: 1px solid #eee;
-            }
-            .story td {
-                padding: 8px 5px;
-                vertical-align: top;
-            }
-            .story-rank {
-                width: 30px;
-                text-align: right;
-                color: #999;
-                padding-right: 10px;
-                font-size: 11px;
-            }
-            .story-title {
-                font-size: 13px;
-                line-height: 1.3;
-                margin-bottom: 4px;
-            }
-            .story-title a {
-                color: #0000ff;
-                text-decoration: underline;
-            }
-            .story-title a:hover {
-                background: #0000ff;
-                color: #fff;
-                text-decoration: none;
-            }
-            .story-meta {
-                font-size: 11px;
-                color: #999;
-            }
-            .story-tags {
-                font-size: 10px;
-                margin-top: 2px;
-            }
-            .story-tags a {
-                color: #0000ff;
-                text-decoration: underline;
-                margin-right: 6px;
-            }
-            .story-tags a:hover {
-                background: #0000ff;
-                color: #fff;
-                text-decoration: none;
-            }
-            .footer {
-                margin-top: 40px;
-                font-size: 11px;
-                color: #666;
-                border-top: 1px solid #ccc;
-                padding-top: 10px;
-            }
-            .footer a {
-                color: #0000ff;
-                text-decoration: underline;
-            }
-            .footer a:hover {
-                background: #0000ff;
-                color: #fff;
-                text-decoration: none;
-            }
-            @media (prefers-color-scheme: dark) {
-                body {
-                    background: #1a1a1a;
-                    color: #ccc;
-                }
-                .tag {
-                    color: #88f;
-                }
-                .tag:hover {
-                    background: #88f;
-                    color: #000;
-                }
-                .tag.active {
-                    background: #fff;
-                    color: #000;
-                }
-                .story-title a {
-                    color: #88f;
-                }
-                .story-title a:hover {
-                    background: #88f;
-                    color: #000;
-                }
-                .story-tags a {
-                    color: #88f;
-                }
-                .story-tags a:hover {
-                    background: #88f;
-                    color: #000;
-                }
-                .story {
-                    border-color: #333;
-                }
-                .footer {
-                    border-color: #333;
-                    color: #999;
-                }
-                .footer a {
-                    color: #88f;
-                }
-                .footer a:hover {
-                    background: #88f;
-                    color: #000;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <Header />
-        <div class="container">
-            <h1 class="page-title">Blog</h1>
-
-            <div class="tags">
-                <a href="/blog" class={!selectedTag ? "tag active" : "tag"}
-                    >all</a
-                >
-                {
-                    allTags.map((tag) => (
-                        <a
-                            href={`/blog?tag=${tag}`}
-                            class={selectedTag === tag ? "tag active" : "tag"}
-                        >
-                            {tag}
-                        </a>
-                    ))
-                }
-            </div>
-
-            <table class="stories">
-                {
-                    filteredPosts.map((post, index) => (
-                        <tr class="story">
-                            <td class="story-rank">{index + 1}.</td>
-                            <td>
-                                <div class="story-title">
-                                    <a href={`/blog/${post.id}/`}>
-                                        {post.data.title}
-                                    </a>
-                                </div>
-                                <div class="story-meta">
-                                    <FormattedDate date={post.data.pubDate} />
-                                    {post.data.tags &&
-                                        post.data.tags.length > 0 && (
-                                            <div class="story-tags">
-                                                {post.data.tags.map((tag) => (
-                                                    <a
-                                                        href={`/blog?tag=${tag}`}
-                                                    >
-                                                        {tag}
-                                                    </a>
-                                                ))}
-                                            </div>
-                                        )}
-                                </div>
-                            </td>
-                        </tr>
-                    ))
-                }
-            </table>
-
-            {
-                filteredPosts.length === 0 && (
-                    <div style="text-align: center; padding: 40px; color: #999; font-size: 12px;">
-                        No posts found for tag "{selectedTag}".
-                    </div>
-                )
-            }
-
-            <div class="footer">
-                &copy; 2025 keinsell | <a href="https://github.com/keinsell"
-                    >github</a
-                > | <a href="https://twitter.com/keinsell">twitter</a>
-            </div>
-        </div>
-    </body>
+	<head>
+		<BaseHead 
+			title="Blog - keinsell" 
+			description="Personal blog posts about software engineering, technology, and life experiences"
+		/>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			body {
+				font-family: monospace;
+				font-size: 12px;
+				line-height: 1.4;
+				color: #000;
+				background: #fff;
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+			.container {
+				padding: 10px 20px;
+				max-width: 800px;
+				margin: 0 auto;
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+			}
+			.page-header {
+				margin-bottom: 30px;
+				padding-bottom: 20px;
+				border-bottom: 1px solid #ccc;
+			}
+			.page-header h1 {
+				font-size: 24px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+			.page-description {
+				font-size: 13px;
+				color: #333;
+			}
+			.back-link {
+				margin-bottom: 20px;
+			}
+			.back-link a {
+				color: #0000ff;
+				text-decoration: underline;
+				font-size: 12px;
+			}
+			.back-link a:hover {
+				background: #0000ff;
+				color: #fff;
+				text-decoration: none;
+			}
+			.blog-list {
+				list-style: none;
+			}
+			.blog-item {
+				margin-bottom: 25px;
+				padding-bottom: 20px;
+				border-bottom: 1px solid #eee;
+			}
+			.blog-item:last-child {
+				border-bottom: none;
+			}
+			.blog-item h2 {
+				font-size: 16px;
+				font-weight: bold;
+				margin-bottom: 8px;
+			}
+			.blog-item h2 a {
+				color: #000;
+				text-decoration: none;
+			}
+			.blog-item h2 a:hover {
+				color: #0000ff;
+				text-decoration: underline;
+			}
+			.blog-meta {
+				font-size: 11px;
+				color: #666;
+				margin-bottom: 8px;
+			}
+			.blog-description {
+				font-size: 12px;
+				color: #333;
+				line-height: 1.5;
+			}
+			.read-more {
+				margin-top: 8px;
+			}
+			.read-more a {
+				color: #0000ff;
+				text-decoration: underline;
+				font-size: 11px;
+			}
+			.read-more a:hover {
+				background: #0000ff;
+				color: #fff;
+				text-decoration: none;
+			}
+			.no-posts {
+				text-align: center;
+				color: #666;
+				font-style: italic;
+				margin: 40px 0;
+			}
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: #1a1a1a;
+					color: #ccc;
+				}
+				.page-header {
+					border-color: #333;
+				}
+				.page-description {
+					color: #aaa;
+				}
+				.back-link a {
+					color: #88f;
+				}
+				.back-link a:hover {
+					background: #88f;
+					color: #000;
+				}
+				.blog-item {
+					border-color: #333;
+				}
+				.blog-item h2 a {
+					color: #ccc;
+				}
+				.blog-item h2 a:hover {
+					color: #88f;
+				}
+				.blog-meta {
+					color: #999;
+				}
+				.blog-description {
+					color: #aaa;
+				}
+				.read-more a {
+					color: #88f;
+				}
+				.read-more a:hover {
+					background: #88f;
+					color: #000;
+				}
+				.no-posts {
+					color: #999;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<NavigationBar />
+		<div class="container">
+			{sortedPosts.length > 0 ? (
+				<ul class="blog-list">
+					{sortedPosts.map((post) => (
+						<li class="blog-item">
+							<h2>
+								<a href={`/blog/${post.id}`}>{post.data.title}</a>
+							</h2>
+							<div class="blog-meta">
+								<FormattedDate date={post.data.pubDate} />
+							</div>
+							{post.data.description && (
+								<div class="blog-description">
+									{post.data.description}
+								</div>
+							)}
+							<div class="read-more">
+								<a href={`/blog/${post.id}`}>Read more →</a>
+							</div>
+						</li>
+					))}
+				</ul>
+			) : (
+				<div class="no-posts">
+					No blog posts available yet.
+				</div>
+			)}
+		</div>
+	</body>
 </html>

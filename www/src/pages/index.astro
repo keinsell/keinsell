@@ -1,19 +1,13 @@
 ---
-import { getCollection } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import NavigationBar from "../components/NavigationBar.astro";
-import FormattedDate from "../components/FormattedDate.astro";
-
-const posts = (await getCollection("blog"))
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-    .slice(0, 5);
 ---
 
 <html lang="en">
     <head>
         <BaseHead
             title="keinsell"
-            description="Jakub Olan - Software engineer focused on Rust, OCaml, and building meaningful tools."
+            description="keinsell - Software Engineer focused on vision about software products, architectural decisions, and strategic processes."
         />
         <style>
             * {
@@ -27,12 +21,17 @@ const posts = (await getCollection("blog"))
                 line-height: 1.4;
                 color: #000;
                 background: #fff;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
             }
             .container {
                 padding: 10px 20px;
                 max-width: 800px;
                 margin: 0 auto;
-                min-height: calc(100vh - 40px);
+                flex: 1;
+                display: flex;
+                flex-direction: column;
             }
             .intro {
                 margin-bottom: 25px;
@@ -63,50 +62,6 @@ const posts = (await getCollection("blog"))
                 font-weight: bold;
                 margin-bottom: 10px;
                 margin-top: 30px;
-            }
-            .stories {
-                border-collapse: collapse;
-                width: 100%;
-            }
-            .story {
-                border-bottom: 1px solid #eee;
-            }
-            .story td {
-                padding: 8px 5px;
-                vertical-align: top;
-            }
-            .story-rank {
-                width: 30px;
-                text-align: right;
-                color: #999;
-                padding-right: 10px;
-                font-size: 11px;
-            }
-            .story-title {
-                font-size: 13px;
-                line-height: 1.3;
-                margin-bottom: 4px;
-            }
-            .story-title a {
-                color: #0000ff;
-                text-decoration: underline;
-            }
-            .story-title a:hover {
-                background: #0000ff;
-                color: #fff;
-                text-decoration: none;
-            }
-            .story-meta {
-                font-size: 11px;
-                color: #999;
-            }
-            .story-tags {
-                font-size: 10px;
-                margin-top: 2px;
-            }
-            .story-tags span {
-                color: #666;
-                margin-right: 6px;
             }
             .footer {
                 margin-top: 40px;
@@ -139,16 +94,6 @@ const posts = (await getCollection("blog"))
                     background: #88f;
                     color: #000;
                 }
-                .story-title a {
-                    color: #88f;
-                }
-                .story-title a:hover {
-                    background: #88f;
-                    color: #000;
-                }
-                .story {
-                    border-color: #333;
-                }
                 .footer {
                     border-color: #333;
                     color: #999;
@@ -169,20 +114,14 @@ const posts = (await getCollection("blog"))
             <div class="intro">
                 <h1>keinsell</h1>
                 <p>
-                    This website is cutting-edge to the point where it can
-                    dramatically change from day to day, because I didn't
-                    estabilished which kind of content I want to have there.
+                    Software Engineer focused on vision about software products rather than individual details, strategically handling architectural decisions that shape the future of software products.
+                </p>
+                <p>
+                    My journey began in 2016 with UI/UX design and has evolved into a deep understanding of both front-end user experiences and back-end systems, with a passion for programming languages and frameworks that empower software engineering.
                 </p>
                 <div class="intro-links">
-                    <a href="/blog">blog</a>
-                    <a href="/story">story</a>
                     <a href="https://github.com/keinsell">github</a>
                 </div>
-            </div>
-            <div class="footer">
-                &copy; 2025 keinsell | <a href="https://github.com/keinsell"
-                    >github</a
-                > | <a href="https://twitter.com/keinsell">twitter</a>
             </div>
         </div>
     </body>

@@ -9,6 +9,11 @@ const currentPath = Astro.url.pathname;
         font-family: monospace;
         font-size: 12px;
         line-height: 1.2;
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 100;
+        border-bottom: 1px solid #eee;
     }
     .nav-wrapper {
         padding: 10px 20px;
@@ -36,6 +41,10 @@ const currentPath = Astro.url.pathname;
     }
 
     @media (prefers-color-scheme: dark) {
+        .nav-container {
+            background: #1a1a1a;
+            border-bottom-color: #333;
+        }
         .nav-links a {
             color: #88f;
         }
@@ -55,26 +64,7 @@ const currentPath = Astro.url.pathname;
         <nav>
             <div class="nav-links">
                 <a href="/" class={currentPath === "/" ? "active" : ""}>home</a>
-                <a
-                    href="/blog"
-                    class={currentPath.startsWith("/blog") ? "active" : ""}
-                    >blog</a
-                >
-                <a
-                    href="/docs/"
-                    class={currentPath.startsWith("/docs") ? "active" : ""}
-                    >wiki</a
-                >
-                <a
-                    href="/story"
-                    class={currentPath.startsWith("/story") ? "active" : ""}
-                    >story</a
-                >
-                <a
-                    href="/about"
-                    class={currentPath.startsWith("/about") ? "active" : ""}
-                    >about</a
-                >
+                <a href="/blog" class={currentPath.startsWith("/blog") ? "active" : ""}>blog</a>
             </div>
         </nav>
     </div>
