@@ -1,3 +1,0 @@
-(test
- (name test_kamel)
- (libraries kamel unix dream lwt lwt.unix yojson cohttp cohttp-lwt-unix alcotest))

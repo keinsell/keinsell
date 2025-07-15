@@ -1,9 +1,12 @@
 [submodule "neuronek-cli"]
-	path = apps/neuronek/cli
+	path = application-software/neuronek/cli
 	url = https://github.com/keinsell/neuronek-cli
 [submodule "neuronek-desktop"]
-	path = apps/neuronek/desktop
+	path = application-software/neuronek/desktop
 	url = https://github.com/keinsell/neuronek-desktop
 [submodule "bikeramp"]
-	path = apps/bikeramp
+	path = application-software/bikeramp
 	url = https://github.com/keinsell/bikeramp
+[submodule "dotfiles"]
+    path = .dotfiles
+	url = https://github.com/keinsell/dotfiles

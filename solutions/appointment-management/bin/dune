@@ -1,6 +1,0 @@
-(executable
- (public_name kamel)
- (name main)
- (libraries kamel unix dream lwt lwt.unix yojson cohttp cohttp-lwt-unix)
- (flags (:standard -w -27-32-33))
- (modes native byte))
