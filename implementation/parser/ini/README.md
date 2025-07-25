@@ -1,4 +1,4 @@
-# Parser
+# ini-parser
 
 ```
 FUNCTION ParseINI(filePath):
