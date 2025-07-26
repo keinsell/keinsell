@@ -1,0 +1,257 @@
+---
+export interface TimelineItem {
+    id: string;
+    type: "commit" | "post" | "repo" | "issue" | "pr";
+    title: string;
+    description?: string;
+    date: Date;
+    url?: string;
+    repo?: string;
+}
+
+export interface Props {
+    items: TimelineItem[];
+    currentPage?: number;
+    hasMore?: boolean;
+}
+
+const { items = [], currentPage = 1, hasMore = false } = Astro.props;
+
+function formatDate(date: Date): string {
+    const now = new Date();
+    const diffInHours = Math.floor(
+        (now.getTime() - date.getTime()) / (1000 * 60 * 60),
+    );
+
+    if (diffInHours < 1) return "now";
+    if (diffInHours < 24) return `${diffInHours}h`;
+    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d`;
+
+    return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+    });
+}
+
+function getTypePrefix(type: string): string {
+    switch (type) {
+        case "commit":
+            return "→";
+        case "post":
+            return "•";
+        case "repo":
+            return "+";
+        case "pr":
+            return "↑";
+        case "issue":
+            return "!";
+        default:
+            return "·";
+    }
+}
+---
+
+<style>
+    .timeline {
+        margin: 0;
+        padding: 0;
+        font-family: monospace;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .timeline-item {
+        display: flex;
+        margin-bottom: 8px;
+        align-items: flex-start;
+    }
+
+    .timeline-prefix {
+        margin-right: 8px;
+        color: #666;
+        font-family: monospace;
+        min-width: 12px;
+        flex-shrink: 0;
+    }
+
+    .timeline-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .timeline-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 8px;
+    }
+
+    .timeline-time {
+        color: #999;
+        font-size: 11px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .timeline-title {
+        color: #000;
+        text-decoration: none;
+        word-break: break-word;
+    }
+
+    .timeline-title:hover {
+        color: #0000ff;
+        text-decoration: underline;
+    }
+
+    .timeline-repo {
+        color: #999;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .timeline-description {
+        color: #999;
+        font-size: 10px;
+        margin-top: 2px;
+        margin-left: 16px;
+        line-height: 1.3;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+        font-size: 12px;
+        font-family: monospace;
+    }
+
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+        font-family: monospace;
+        font-size: 11px;
+    }
+
+    .pagination a {
+        color: #0000ff;
+        text-decoration: underline;
+        margin: 0 8px;
+    }
+
+    .pagination a:hover {
+        background: #0000ff;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .page-info {
+        color: #999;
+        margin: 0 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .timeline-prefix {
+            color: #999;
+        }
+
+        .timeline-title {
+            color: #ccc;
+        }
+
+        .timeline-title:hover {
+            color: #88f;
+        }
+
+        .timeline-time {
+            color: #666;
+        }
+
+        .timeline-repo {
+            color: #666;
+        }
+
+        .timeline-description {
+            color: #555;
+        }
+
+        .empty-state {
+            color: #666;
+        }
+
+        .pagination a {
+            color: #88f;
+        }
+
+        .pagination a:hover {
+            background: #88f;
+            color: #000;
+        }
+
+        .page-info {
+            color: #666;
+        }
+    }
+</style>
+
+<div class="timeline">
+    {
+        items.length === 0 ? (
+            <div class="empty-state">
+                <p>no recent activity</p>
+            </div>
+        ) : (
+            items.map((item) => (
+                <div class="timeline-item">
+                    <span class="timeline-prefix">
+                        {getTypePrefix(item.type)}
+                    </span>
+                    <div class="timeline-content">
+                        <div class="timeline-line">
+                            <span class="timeline-time">
+                                {formatDate(item.date)}
+                            </span>
+                            {item.url ? (
+                                <a
+                                    href={item.url}
+                                    class="timeline-title"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {item.title}
+                                </a>
+                            ) : (
+                                <span class="timeline-title">{item.title}</span>
+                            )}
+                            {item.repo && (
+                                <span class="timeline-repo">{item.repo}</span>
+                            )}
+                        </div>
+                        {item.description && (
+                            <div class="timeline-description">
+                                {item.description}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ))
+        )
+    }
+
+    {
+        (hasMore || currentPage > 1) && (
+            <div class="pagination">
+                {currentPage > 1 && (
+                    <a href={`/feed?page=${currentPage - 1}`}>← prev</a>
+                )}
+                {currentPage > 1 && hasMore && (
+                    <span class="page-info">page {currentPage}</span>
+                )}
+                {hasMore && (
+                    <a href={`/feed?page=${currentPage + 1}`}>next →</a>
+                )}
+            </div>
+        )
+    }
+</div>

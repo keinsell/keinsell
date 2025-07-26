@@ -1,0 +1,73 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import NavigationBar from "../components/NavigationBar.astro";
+import Timeline from "../components/Timeline.astro";
+import { getTimelineData } from "../utils/timelineData";
+
+const url = new URL(Astro.request.url);
+const page = parseInt(url.searchParams.get("page") || "1", 10);
+
+let timelineData;
+try {
+    timelineData = await getTimelineData(page, 15); // 15 items per page
+} catch (error) {
+    console.error("Failed to fetch timeline data:", error);
+    timelineData = await getTimelineData(1, 15); // Fallback to page 1
+}
+---
+
+<html lang="en">
+    <head>
+        <BaseHead
+            title="Feed - keinsell"
+            description="Recent activity feed from GitHub and other sources."
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .container {
+                padding: 10px 20px;
+                max-width: 800px;
+                margin: 0 auto;
+                flex: 1;
+            }
+            .page-header {
+                margin-bottom: 15px;
+            }
+            .page-header h1 {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 0;
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #1a1a1a;
+                    color: #ccc;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <NavigationBar />
+        <div class="container">
+            <Timeline
+                items={timelineData.items}
+                currentPage={timelineData.currentPage}
+                hasMore={timelineData.hasMore}
+            />
+        </div>
+    </body>
+</html>
