@@ -10,3 +10,6 @@
 [submodule "dotfiles"]
     path = .dotfiles
 	url = https://github.com/keinsell/dotfiles
+[submodule "website"]
+	path = website
+	url = https://github.com/keinsell/www.keinsell.com
