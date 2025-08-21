@@ -1,4 +1,0 @@
-(executable
- (name main)
- (public_name csv)
- (libraries csv))

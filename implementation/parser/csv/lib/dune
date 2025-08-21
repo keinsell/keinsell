@@ -1,4 +1,0 @@
-(library
- (name csv)
- (public_name csv)
- (libraries))
