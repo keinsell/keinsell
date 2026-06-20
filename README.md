@@ -1,0 +1,1 @@
+I've been a computer programmer who loved to be in company of systems and objects, never been in education about computer science and majority of what have been done under this space was purely for joy or experimentation. I've never been fan of introducing myself, let the code speak about me.
